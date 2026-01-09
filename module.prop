@@ -1,0 +1,6 @@
+id=floppy_companion
+name=FloppyKernel Companion
+version=v0.0.1
+versionCode=001
+author=Flopster101
+description=Companion module to tweak FloppyKernel.
