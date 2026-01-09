@@ -170,7 +170,7 @@ async function init() {
         deviceEl.textContent = 'Unknown';
     }
 
-    // --- Device Specific Features ---
+    // --- Platform specific features ---
 
     // AOSP Mode (Floppy1280 Only)
     if (is1280) {
@@ -198,9 +198,7 @@ async function init() {
         exitBtn.addEventListener('click', () => {
             if (typeof ksu !== 'undefined' && ksu.exit) {
                 ksu.exit();
-            } else {
-                console.log('Exit requested (testing environment)');
-                // window.close(); // Often blocked in browsers
+
             }
         });
     }
