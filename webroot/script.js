@@ -49,9 +49,12 @@ async function init() {
     const navItems = document.querySelectorAll('.nav-item');
     const sliderTrack = document.getElementById('slider-track');
     const TAB_COUNT = 4; // Status, Features, Tweaks, About
+    let currentIndex = 0;
 
     function updateSlide(index) {
+        currentIndex = index;
         // Update Bottom Nav
+
         navItems.forEach((nav, i) => {
             if (i === index) nav.classList.add('active');
             else nav.classList.remove('active');
@@ -88,24 +91,46 @@ async function init() {
 
     // Touch / Swipe Logic
     let startX = 0;
+    let startY = 0;
     let currentX = 0;
+    let currentY = 0;
     let isDragging = false;
-    let currentIndex = 0;
+    let isHorizontalSwipe = null; // null = undetermined, true = horizontal, false = vertical
 
-    const minSwipeDistance = 50; // px
 
-    // Attach to slider container or document
+    const minSwipeDistance = 80;
+    const swipeAngleThreshold = 0.5; // Horizontal movement threshold
+
     const sliderContainer = document.querySelector('.slider-container');
 
     sliderContainer.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        currentY = startY;
         isDragging = true;
+        isHorizontalSwipe = null;
         sliderTrack.style.transition = 'none'; // Disable transition for direct follow
     }, { passive: true });
 
     sliderContainer.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
         currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+
+        const diffX = Math.abs(currentX - startX);
+        const diffY = Math.abs(currentY - startY);
+
+        // Determine swipe direction on first significant movement
+        if (isHorizontalSwipe === null && (diffX > 10 || diffY > 10)) {
+            isHorizontalSwipe = diffX > diffY * swipeAngleThreshold;
+        }
+
+        // Only handle horizontal swipes
+        if (!isHorizontalSwipe) {
+            return;
+        }
+
         const diff = currentX - startX;
 
         // Calculate resistance or limit
@@ -119,7 +144,6 @@ async function init() {
 
         // Form boundaries with resistance
         if (newTranslate > 0) newTranslate = newTranslate * 0.3;
-        // Max negative is -75% (3 * -25)
         if (newTranslate < -75) newTranslate = -75 + (newTranslate + 75) * 0.3;
 
         sliderTrack.style.transform = `translateX(${newTranslate}%)`;
@@ -131,8 +155,9 @@ async function init() {
         sliderTrack.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0, 1)'; // Restore transition
 
         const diff = currentX - startX;
-        // Determine whether to change slide
-        if (Math.abs(diff) > minSwipeDistance) {
+
+        // Only change slide if it was a deliberate horizontal swipe
+        if (isHorizontalSwipe && Math.abs(diff) > minSwipeDistance) {
             if (diff < 0 && currentIndex < TAB_COUNT - 1) {
                 currentIndex++;
             } else if (diff > 0 && currentIndex > 0) {

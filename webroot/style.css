@@ -59,17 +59,19 @@ body.theme-orange {
     padding: 0;
 }
 
+
 body {
     font-family: 'Roboto', sans-serif;
     /* Fallback, KSU usually provides system fonts */
     background-color: var(--md-sys-color-surface);
     color: var(--md-sys-color-on-surface);
-    /* display: flex; REMOVED flex center to allow scrolling and app bar flow */
-    /* justify-content: center; */
-    min-height: 100vh;
+
+    height: 100vh;
     padding: 0;
-    /* Removing body padding, handled by container */
-    overflow-x: hidden;
+    overflow: hidden;
+    /* Lock body scroll to prevent fixed elements bouncing */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 
@@ -143,8 +145,13 @@ body {
 
 .tab-content {
     width: 25%;
-    /* Each tab is 25% of track (100% of container) */
     flex-shrink: 0;
+    height: 100vh;
+    overflow-y: auto;
+
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 80px;
+    /* Ensure bottom content isn't hidden by nav */
 }
 
 .tab-content.hidden {
