@@ -446,3 +446,23 @@ window.setReadonlyPatch = function (val) {
         renderFeatures(currentSchema, currentProcCmdline);
     }
 }
+
+// --- Bubble Logic ---
+window.toggleBubble = function (id, event) {
+    if (event) event.stopPropagation();
+    const bubble = document.getElementById(id);
+    if (bubble) {
+        // Hide all other bubbles first
+        document.querySelectorAll('.status-bubble').forEach(b => {
+            if (b.id !== id) b.classList.add('hidden');
+        });
+        bubble.classList.toggle('hidden');
+    }
+}
+
+// Hide bubbles when clicking anywhere else
+document.addEventListener('click', () => {
+    document.querySelectorAll('.status-bubble').forEach(b => {
+        b.classList.add('hidden');
+    });
+});
