@@ -59,6 +59,11 @@ chmod +x "$TOOLS_DIR/magiskboot"
 echo "Packaging $ZIP_NAME..."
 cd "$MODULE_DIR" || exit 1
 
+# Temporarily update module.prop version to include git hash
+ORIGINAL_VERSION="$VERSION"
+NEW_VERSION="${VERSION}-${HASH}"
+sed -i "s/^version=.*/version=${NEW_VERSION}/" module.prop
+
 # Zip contents of current directory
 # Exclude:
 # - .git directory
@@ -66,6 +71,9 @@ cd "$MODULE_DIR" || exit 1
 # - any existing .zip files
 # - backend script placeholders if any (we will add real ones later)
 zip -r "$ZIP_NAME" . -x "*.git*" "build.sh" "*.zip"
+
+# Restore original module.prop version
+sed -i "s/^version=.*/version=${ORIGINAL_VERSION}/" module.prop
 
 # Cleanup tools binary (leave directory if it exists in repo)
 rm -f "$TOOLS_DIR/magiskboot"
