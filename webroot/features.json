@@ -1,0 +1,69 @@
+{
+    "features_1280": [
+        {
+            "key": "superfloppy",
+            "title": "Unlocked Mode",
+            "type": "select",
+            "desc": "CPU and GPU clock tweaks for FloppyKernel.",
+            "options": [
+                {
+                    "val": "1",
+                    "label": "Enabled",
+                    "desc": "CL0 2.2 GHz / CL1 2.496 GHz, GPU 1.209 GHz, UV disabled.",
+                    "experimental": false
+                },
+                {
+                    "val": "2",
+                    "label": "MegaFloppy",
+                    "desc": "CL0 2.2 GHz / CL1 2.6 GHz, GPU 1.209 GHz, UV disabled.",
+                    "experimental": true
+                },
+                {
+                    "val": "3",
+                    "label": "UltraFloppy",
+                    "desc": "CL0 2.2 GHz / CL1 2.704 GHz, GPU 1.209 GHz, UV disabled.",
+                    "experimental": true
+                },
+                {
+                    "val": "4",
+                    "label": "CoolFloppy",
+                    "desc": "CL1 capped 2.112 GHz (better efficiency/thermals), GPU stock, UV enabled.",
+                    "experimental": false
+                },
+                {
+                    "val": "5",
+                    "label": "Balanced",
+                    "desc": "CL0 2.2 GHz (OC), CL1 stock 2.4 GHz, GPU stock, UV disabled.",
+                    "experimental": false
+                }
+            ],
+            "warnIfMismatch": true
+        },
+        {
+            "key": "force_perm",
+            "title": "Force Permissive",
+            "type": "toggle",
+            "desc": "Force SELinux Permissive mode. For developers.",
+            "experimental": true
+        },
+        {
+            "key": "ems_efficient",
+            "title": "EMS Efficient Mode",
+            "type": "toggle",
+            "desc": "Enable EMS efficient scheduler mode. Reduces performance and improves battery."
+        },
+        {
+            "key": "aosp_mode",
+            "title": "AOSP Mode",
+            "type": "info",
+            "desc": "Enable hacks specific to AOSP."
+        }
+    ],
+    "features_trinket": [
+        {
+            "title": "Trinket Features",
+            "type": "info",
+            "desc": "Features for FloppyTrinketMi are not yet defined."
+        }
+    ]
+}
