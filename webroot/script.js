@@ -496,12 +496,37 @@ async function init() {
                 if (match) liveVal = match[1];
             }
 
-            let warningHtml = '';
-            if (item.warnIfMismatch && liveVal !== null && liveVal !== currentVal) {
-                warningHtml = `<div class="feature-warning" onclick="alert('Running value (${liveVal}) differs from Image value (${currentVal}). Reboot required.')">
-                    <svg class="icon-svg" viewBox="0 0 24 24" style="width:16px;height:16px;margin:0;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-                    <span>Restart pending</span>
-                </div>`;
+            // --- Status Icons Logic ---
+            let statusIconsHtml = '';
+
+            // 1. Reboot Warning (Green Reboot Icon)
+            if (liveVal !== null && liveVal !== currentVal) {
+                const bubbleId = `bubble-reboot-${item.key}`;
+                statusIconsHtml += `
+                    <div class="status-icon-wrapper" style="position:relative;">
+                        <svg class="status-icon reboot" onclick="toggleBubble('${bubbleId}', event)" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                        </svg>
+                        <div id="${bubbleId}" class="status-bubble hidden">
+                            The running kernel's value and boot partition's value are mismatched! A reboot might be pending to apply changes.
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 2. Read-Only Warning (Yellow Warning Icon)
+            if (item.type === 'info') {
+                const bubbleId = `bubble-readonly-${item.key}`;
+                statusIconsHtml += `
+                    <div class="status-icon-wrapper" style="position:relative;">
+                        <svg class="status-icon warning" onclick="toggleBubble('${bubbleId}', event)" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <div id="${bubbleId}" class="status-bubble hidden">
+                            This feature's state cannot be changed from the UI.
+                        </div>
+                    </div>
+                `;
             }
 
             // --- Switch Construction ---
@@ -572,13 +597,42 @@ async function init() {
                     </div>
                 </div>
                 ${bodyControls}
-                ${warningHtml}
-                ${currentValueHtml}
+                
+                <div class="feature-footer">
+                     ${currentValueHtml}
+                     <div class="status-icon-container">
+                         ${statusIconsHtml}
+                     </div>
+                </div>
             `;
 
             featuresContainer.appendChild(el);
         });
     }
+
+    // Toggle Bubble Visibility (Global)
+    window.toggleBubble = (id, event) => {
+        if (event) event.stopPropagation();
+
+        // Close others
+        document.querySelectorAll('.status-bubble').forEach(b => {
+            if (b.id !== id) b.classList.add('hidden');
+        });
+
+        const bubble = document.getElementById(id);
+        if (bubble) {
+            bubble.classList.toggle('hidden');
+        }
+    };
+
+    // Close bubbles when clicking elsewhere
+    document.addEventListener('click', (e) => {
+        // If click is inside a bubble, don't close
+        if (e.target.closest('.status-bubble')) return;
+
+        // Close all bubbles
+        document.querySelectorAll('.status-bubble').forEach(b => b.classList.add('hidden'));
+    });
 
     // Expose to window for inline onclick
     window.updateFeature = (key, val, target) => {
