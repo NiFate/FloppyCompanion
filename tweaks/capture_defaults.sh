@@ -3,10 +3,11 @@
 # Called at boot BEFORE any tweaks are applied
 
 MODDIR="${0%/*}/.."
-OUTPUT_FILE="$MODDIR/presets/.defaults.json"
+DATA_DIR="/data/adb/floppy_companion"
+OUTPUT_FILE="$DATA_DIR/presets/.defaults.json"
 
 # Create presets directory
-mkdir -p "$MODDIR/presets"
+mkdir -p "$DATA_DIR/presets"
 
 # --- ZRAM Defaults ---
 ZRAM_DEV=""

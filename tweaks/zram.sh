@@ -2,7 +2,8 @@
 # ZRAM Tweak Backend Script
 
 MODDIR="${0%/*}/.."
-CONFIG_FILE="$MODDIR/tweaks/.zram_config"
+DATA_DIR="/data/adb/floppy_companion"
+CONFIG_FILE="$DATA_DIR/config/zram.conf"
 ZRAM_DEV=""
 
 # Find ZRAM device
@@ -35,7 +36,9 @@ get_current() {
     
     # Check if swap is enabled
     local swap_enabled=0
-    if swapon 2>/dev/null | grep -q zram0; then
+    if [ -f /proc/swaps ] && grep -q "zram" /proc/swaps; then
+        swap_enabled=1
+    elif swapon 2>/dev/null | grep -q zram; then
         swap_enabled=1
     fi
     

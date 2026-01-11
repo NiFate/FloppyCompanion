@@ -12,6 +12,11 @@ done
 # Additional delay for vendor scripts to finish
 sleep 3
 
+# --- Persistence Setup ---
+DATA_DIR="/data/adb/floppy_companion"
+mkdir -p "$DATA_DIR/config"
+mkdir -p "$DATA_DIR/presets"
+
 # --- Capture Kernel Defaults (before any tweaks) ---
 if [ -f "$MODDIR/tweaks/capture_defaults.sh" ]; then
     sh "$MODDIR/tweaks/capture_defaults.sh"

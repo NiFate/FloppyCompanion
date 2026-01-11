@@ -31,8 +31,8 @@ async function loadAvailablePresets() {
     // Add Default (always first)
     availablePresets.push({ name: 'Default', builtIn: true, path: null });
 
-    // Load user presets from module directory
-    const presetDir = '/data/adb/modules/floppy_companion/presets';
+    // Load user presets from persistent directory
+    const presetDir = '/data/adb/floppy_companion/presets';
     const listResult = await exec(`ls -1 "${presetDir}"/*.json 2>/dev/null || true`);
 
     if (listResult && listResult.trim()) {
@@ -50,7 +50,7 @@ async function loadAvailablePresets() {
 
 // Load Default preset (kernel defaults captured at boot)
 async function loadDefaultPreset() {
-    const defaultPath = '/data/adb/modules/floppy_companion/presets/.defaults.json';
+    const defaultPath = '/data/adb/floppy_companion/presets/.defaults.json';
     const content = await exec(`cat "${defaultPath}" 2>/dev/null || echo "{}"`);
 
     try {

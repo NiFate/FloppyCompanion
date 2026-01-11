@@ -2,8 +2,9 @@
 # Memory Tweaks Backend
 
 MODDIR=${0%/*}
-CONF_FILE="$MODDIR/memory.conf"
-DEFAULTS_FILE="$MODDIR/../presets/.defaults.json"
+DATA_DIR="/data/adb/floppy_companion"
+CONF_FILE="$DATA_DIR/config/memory.conf"
+DEFAULTS_FILE="$DATA_DIR/presets/.defaults.json"
 
 # Helper to read a value
 read_val() {

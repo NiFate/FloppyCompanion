@@ -2,7 +2,8 @@
 # I/O Scheduler Tweak Backend Script
 
 MODDIR="${0%/*}/.."
-CONFIG_FILE="$MODDIR/tweaks/.iosched_config"
+DATA_DIR="/data/adb/floppy_companion"
+CONFIG_FILE="$DATA_DIR/config/iosched.conf"
 
 # Get list of compatible block devices
 get_devices() {
