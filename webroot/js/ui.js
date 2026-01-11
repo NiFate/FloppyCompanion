@@ -38,6 +38,24 @@ function updateSlide(index) {
         }
     }
 
+    // --- Language Dropdown Visibility ---
+    const langContainer = document.getElementById('lang-dropdown-container');
+    const langMenu = document.getElementById('lang-menu');
+    if (langContainer) {
+        // 'Home' tab is index 0
+        if (index === 0) {
+            langContainer.style.opacity = '1';
+            langContainer.style.pointerEvents = 'auto';
+        } else {
+            langContainer.style.opacity = '0';
+            langContainer.style.pointerEvents = 'none';
+            if (langMenu) {
+                langMenu.classList.remove('visible');
+                langMenu.classList.add('hidden');
+            }
+        }
+    }
+
 
 
     // Update Bottom Nav

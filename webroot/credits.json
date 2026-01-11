@@ -1,0 +1,22 @@
+{
+    "translations": {
+        "en": {
+            "name": "English",
+            "contributors": [
+                {
+                    "name": "Flopster101",
+                    "url": "https://github.com/Flopster101"
+                }
+            ]
+        },
+        "es": {
+            "name": "Español",
+            "contributors": [
+                {
+                    "name": "Flopster101",
+                    "url": "https://github.com/Flopster101"
+                }
+            ]
+        }
+    }
+}

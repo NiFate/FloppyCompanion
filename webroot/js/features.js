@@ -365,12 +365,12 @@ async function applyChanges() {
     if (Object.keys(pendingChanges).length === 0) return;
 
     const proceed = await showConfirmModal({
-        title: 'Apply changes?',
-        body: '<p>This will flash the patched kernel to your device.</p><p><strong>This involves risks.</strong></p>',
+        title: t('modal.applyChangesTitle'),
+        body: t('modal.applyChangesBody'),
         icon: '<svg viewBox="0 0 24 24" width="48" height="48"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="currentColor"/></svg>',
         iconClass: 'warning',
-        confirmText: 'Apply',
-        cancelText: 'Cancel'
+        confirmText: t('modal.apply'),
+        cancelText: t('modal.cancel')
     });
     if (!proceed) return;
 

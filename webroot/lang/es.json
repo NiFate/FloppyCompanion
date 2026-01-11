@@ -1,0 +1,113 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "features": "Características",
+        "tweaks": "Tweaks",
+        "about": "Acerca de"
+    },
+    "home": {
+        "title": "Inicio",
+        "welcome": "¡Bienvenido a FloppyKernel Companion!",
+        "kernelStatus": "Estado del Kernel",
+        "device": "Dispositivo",
+        "linux": "Linux",
+        "variant": "Variante",
+        "version": "Versión",
+        "buildType": "Tipo de compilación",
+        "tools": "Herramientas",
+        "saveLastKmsg": "Guardar last_kmsg",
+        "saveDmesg": "Guardar dmesg",
+        "lastKmsgDesc": "last_kmsg contiene un dmesg + registro del bootloader de la última vez que tu dispositivo fue reiniciado (intencionalmente o por un fallo). Es útil para diagnosticar kernel panics y crasheos.",
+        "dmesgDesc": "dmesg muestra el buffer de anillo (registros) actual del kernel. Es útil para diagnosticar problemas que ocurrieron después del arranque."
+    },
+    "features": {
+        "title": "Características",
+        "kernelFeatures": "Características del Kernel",
+        "showExperimental": "Mostrar características experimentales",
+        "allowReadOnly": "Permitir modificar características de solo lectura",
+        "apply": "Aplicar",
+        "rebootDevice": "Reiniciar dispositivo",
+        "optionDefault": "Predeterminado",
+        "optionEnabled": "Activado",
+        "optionDisabled": "Desactivado",
+        "pendingChanges": "Pendiente",
+        "noDescription": "No hay descripción disponible"
+    },
+    "tweaks": {
+        "title": "Tweaks",
+        "presets": "Preajustes",
+        "commonTweaks": "Ajustes comunes",
+        "save": "Guardar",
+        "apply": "Aplicar",
+        "saveApply": "Guardar y Aplicar",
+        "unsaved": "Sin guardar",
+        "zram": {
+            "title": "ZRAM",
+            "enable": "Activar ZRAM",
+            "diskSize": "Tamaño de disco",
+            "algorithm": "Algoritmo",
+            "custom": "Personalizado",
+            "disableWarningTitle": "¿Desactivar ZRAM?",
+            "disableWarningBody": "Esto tendrá un <strong>impacto negativo importante en el rendimiento</strong> y tu dispositivo podría experimentar congelamientos.",
+            "disableWarningNote": "¡Solo desactiva la ZRAM si sabes lo que estás haciendo!"
+        },
+        "memory": {
+            "title": "Memoria",
+            "swappiness": "Swappiness",
+            "dirtyPages": "Modo de dirty pages",
+            "ratioMode": "Ratio",
+            "bytesMode": "Bytes",
+            "dirtyRatio": "Dirty Ratio",
+            "dirtyBackgroundRatio": "Dirty Background Ratio",
+            "dirtyBytes": "Dirty Bytes",
+            "dirtyBackgroundBytes": "Dirty Background Bytes",
+            "dirtyWriteback": "Dirty Writeback",
+            "dirtyExpire": "Dirty Expire",
+            "statInterval": "Intervalo de estadísticas",
+            "vfsCachePressure": "Presión de caché VFS",
+            "watermarkScale": "Escala de watermark"
+        },
+        "iosched": {
+            "title": "Scheduler de E/S"
+        }
+    },
+    "about": {
+        "title": "Acerca de",
+        "description": "Módulo acompañante para configurar FloppyKernel.",
+        "moduleLinks": "Enlaces del módulo",
+        "kernelLinksTemplate": "Enlaces de {name}",
+        "translationCredits": "Créditos de traducción",
+        "repository": "repositorio",
+        "telegram": "Canal de Telegram"
+    },
+    "toast": {
+        "settingsSaved": "Configuración guardada",
+        "settingsApplied": "Configuración aplicada",
+        "settingsFailed": "Error al aplicar configuración",
+        "logSaved": "Registro guardado en {path}",
+        "logFailed": "Error al guardar registro",
+        "copied": "Copiado al portapapeles"
+    },
+    "modal": {
+        "confirm": "Confirmar",
+        "cancel": "Cancelar",
+        "close": "Cerrar",
+        "enable": "Activar",
+        "disable": "Desactivar",
+        "apply": "Aplicar",
+        "reboot": "Reiniciar",
+        "experimentalTitle": "Características experimentales",
+        "experimentalBody": "<p>Las características expuestas al activar esta opción pueden estar incompletas, sin soporte o ser peligrosas.</p><p><strong>Procede con precaución.</strong></p>",
+        "readonlyTitle": "¿Permitir modificar solo lectura?",
+        "readonlyBody": "<p>Esto permite modificar características marcadas como solo lectura.</p><p><strong>Usar solo para pruebas. Los cambios NO se guardarán.</strong></p>",
+        "applyChangesTitle": "¿Aplicar cambios?",
+        "applyChangesBody": "<p>Esto flasheará el kernel con la característica modificada a tu dispositivo.</p><p><strong>Esto implica riesgos.</strong></p>",
+        "rebootPendingBody": "<p>¿Estás seguro de que quieres {action}?</p><p><strong>¡Tienes cambios sin aplicar que se perderán!</strong></p>",
+        "processingKernel": "Procesando Kernel..."
+    },
+    "language": {
+        "title": "Idioma",
+        "en": "English",
+        "es": "Español"
+    }
+}

@@ -1,0 +1,113 @@
+{
+    "nav": {
+        "home": "Home",
+        "features": "Features",
+        "tweaks": "Tweaks",
+        "about": "About"
+    },
+    "home": {
+        "title": "Home",
+        "welcome": "Welcome to FloppyKernel Companion!",
+        "kernelStatus": "Kernel Status",
+        "device": "Device",
+        "linux": "Linux",
+        "variant": "Variant",
+        "version": "Version",
+        "buildType": "Build Type",
+        "tools": "Tools",
+        "saveLastKmsg": "Save last_kmsg",
+        "saveDmesg": "Save dmesg",
+        "lastKmsgDesc": "last_kmsg contains a dmesg + bootloader log of the last time your device was rebooted (intentionally or through a crash). It's useful for diagnosing kernel panics and crashes.",
+        "dmesgDesc": "dmesg shows the current kernel ring buffer (logs). This is useful for diagnosing issues that occurred after boot."
+    },
+    "features": {
+        "title": "Features",
+        "kernelFeatures": "Kernel Features",
+        "showExperimental": "Show experimental features",
+        "allowReadOnly": "Allow patching read-only features",
+        "apply": "Apply",
+        "rebootDevice": "Reboot Device",
+        "optionDefault": "Default",
+        "optionEnabled": "Enabled",
+        "optionDisabled": "Disabled",
+        "pendingChanges": "Pending",
+        "noDescription": "No description available"
+    },
+    "tweaks": {
+        "title": "Tweaks",
+        "presets": "Presets",
+        "commonTweaks": "Common Tweaks",
+        "save": "Save",
+        "apply": "Apply",
+        "saveApply": "Save & Apply",
+        "unsaved": "Unsaved",
+        "zram": {
+            "title": "ZRAM",
+            "enable": "Enable ZRAM",
+            "diskSize": "Disk Size",
+            "algorithm": "Algorithm",
+            "custom": "Custom",
+            "disableWarningTitle": "Disable ZRAM?",
+            "disableWarningBody": "This will have a <strong>major negative impact on performance</strong> and your device may experience freezes.",
+            "disableWarningNote": "Only disable ZRAM if you know what you are doing!"
+        },
+        "memory": {
+            "title": "Memory",
+            "swappiness": "Swappiness",
+            "dirtyPages": "Dirty Pages Mode",
+            "ratioMode": "Ratio",
+            "bytesMode": "Bytes",
+            "dirtyRatio": "Dirty Ratio",
+            "dirtyBackgroundRatio": "Dirty Background Ratio",
+            "dirtyBytes": "Dirty Bytes",
+            "dirtyBackgroundBytes": "Dirty Background Bytes",
+            "dirtyWriteback": "Dirty Writeback",
+            "dirtyExpire": "Dirty Expire",
+            "statInterval": "Stat Interval",
+            "vfsCachePressure": "VFS Cache Pressure",
+            "watermarkScale": "Watermark Scale"
+        },
+        "iosched": {
+            "title": "I/O Scheduler"
+        }
+    },
+    "about": {
+        "title": "About",
+        "description": "Companion module to configure FloppyKernel.",
+        "moduleLinks": "Module links",
+        "kernelLinksTemplate": "{name} links",
+        "translationCredits": "Translation credits",
+        "repository": "repository",
+        "telegram": "Telegram channel"
+    },
+    "toast": {
+        "settingsSaved": "Settings saved",
+        "settingsApplied": "Settings applied",
+        "settingsFailed": "Failed to apply settings",
+        "logSaved": "Log saved to {path}",
+        "logFailed": "Failed to save log",
+        "copied": "Copied to clipboard"
+    },
+    "modal": {
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "close": "Close",
+        "enable": "Enable",
+        "disable": "Disable",
+        "apply": "Apply",
+        "reboot": "Reboot",
+        "experimentalTitle": "Experimental Features",
+        "experimentalBody": "<p>Features exposed by enabling this toggle might be unfinished, unsupported, or dangerous.</p><p><strong>Proceed with caution.</strong></p>",
+        "readonlyTitle": "Allow Read-Only Patching?",
+        "readonlyBody": "<p>This allows patching features marked as read-only.</p><p><strong>Use only for testing. Changes will NOT be saved.</strong></p>",
+        "applyChangesTitle": "Apply changes?",
+        "applyChangesBody": "<p>This will flash the feature-patched kernel to your device.</p><p><strong>This involves risks.</strong></p>",
+        "rebootPendingBody": "<p>Are you sure you want to {action}?</p><p><strong>You have unapplied changes that will be lost!</strong></p>",
+        "processingKernel": "Processing Kernel..."
+    },
+    "language": {
+        "title": "Language",
+        "en": "English",
+        "es": "Español"
+    }
+}

@@ -198,10 +198,10 @@ async function toggleZramEnabled(enabled) {
     if (!enabled) {
         // Show warning before disabling
         const confirmed = await showConfirmModal({
-            title: 'Disable ZRAM?',
-            body: '<p>This will have a <strong>major negative impact on performance</strong> and your device may experience freezes.</p><p>Only disable ZRAM if you know what you are doing!</p>',
+            title: t('tweaks.zram.disableWarningTitle'),
+            body: `<p>${t('tweaks.zram.disableWarningBody')}</p><p>${t('tweaks.zram.disableWarningNote')}</p>`,
             iconClass: 'warning',
-            confirmText: 'Disable'
+            confirmText: t('modal.disable')
         });
 
         if (!confirmed) {

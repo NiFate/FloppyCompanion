@@ -445,7 +445,9 @@ body {
     gap: 4px;
     cursor: pointer;
     color: var(--md-sys-color-on-surface-variant);
-    width: 64px;
+    flex: 1;
+    min-width: 64px;
+    max-width: 100px;
     border-radius: 16px;
     /* Rounds the tap highlight */
     -webkit-tap-highlight-color: transparent;
@@ -1620,4 +1622,48 @@ body {
 
 .tweak-subsection .tweak-row:last-child {
     border-bottom: none;
+}
+
+/* Translation Credits */
+.credits-language {
+    margin-bottom: 16px;
+}
+
+.credits-language:last-child {
+    margin-bottom: 0;
+}
+
+.credits-lang-name {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+}
+
+.credits-list {
+    margin: 0;
+    padding: 0 0 0 20px;
+    list-style-type: disc;
+}
+
+.credits-list li {
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--md-sys-color-on-surface);
+}
+
+.credits-link {
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+}
+
+.credits-link:hover {
+    text-decoration: underline;
+}
+
+.credits-empty {
+    margin: 0;
+    font-size: 14px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-style: italic;
 }

@@ -1,6 +1,48 @@
 // main.js - Initialization and Event Wiring
 
 async function init() {
+    // --- Initialize i18n ---
+    if (window.I18N) {
+        await I18N.init();
+    }
+
+    // --- Language Dropdown Logic ---
+    const langBtn = document.getElementById('lang-btn');
+    const langMenu = document.getElementById('lang-menu');
+
+    if (langBtn && langMenu) {
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isVisible = langMenu.classList.contains('visible');
+            if (isVisible) {
+                langMenu.classList.remove('visible');
+                setTimeout(() => langMenu.classList.add('hidden'), 200);
+            } else {
+                langMenu.classList.remove('hidden');
+                setTimeout(() => langMenu.classList.add('visible'), 10);
+            }
+        });
+
+        document.addEventListener('click', () => {
+            if (langMenu.classList.contains('visible')) {
+                langMenu.classList.remove('visible');
+                setTimeout(() => langMenu.classList.add('hidden'), 200);
+            }
+        });
+
+        langMenu.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const lang = item.dataset.lang;
+                if (lang && window.I18N) {
+                    await I18N.setLanguage(lang);
+                }
+                langMenu.classList.remove('visible');
+                setTimeout(() => langMenu.classList.add('hidden'), 200);
+            });
+        });
+    }
+
     // --- Theme Logic ---
     let currentThemeMode = localStorage.getItem('theme_mode') || 'auto';
     const themeBtn = document.getElementById('theme-toggle');
@@ -112,9 +154,9 @@ async function init() {
                 if (window.hasPendingChanges && window.hasPendingChanges()) {
                     const confirmed = await showConfirmModal({
                         title: actionName,
-                        body: `<p>Are you sure you want to ${actionName.toLowerCase()}?</p><p><strong>You have unapplied changes that will be lost!</strong></p>`,
+                        body: t('modal.rebootPendingBody', { action: actionName.toLowerCase() }),
                         iconClass: 'warning',
-                        confirmText: 'Reboot'
+                        confirmText: t('modal.reboot')
                     });
 
                     if (!confirmed) return;
@@ -152,13 +194,11 @@ async function init() {
     // Pass detected uname directly to resolveDeviceInfo
     const devInfo = await resolveDeviceInfo(device ? device.uname : null);
 
-    // Populate About Page (from module.prop)
+    // Populate About Page (from module.prop, except description which is i18n)
     const aboutTitle = document.getElementById('about-title');
     const aboutVersion = document.getElementById('about-version');
-    const aboutDesc = document.getElementById('about-desc');
     if (aboutTitle && props.name) aboutTitle.textContent = props.name;
     if (aboutVersion && props.version) aboutVersion.textContent = props.version;
-    if (aboutDesc && props.description) aboutDesc.textContent = props.description;
 
     // Populate Status Page
     const uname = devInfo.uname || (await exec('uname -r'));
@@ -258,20 +298,25 @@ async function init() {
 
     if (kernelLinksCard && kernelLinksList && device) {
         let kernelLinks = [];
+        let kernelName = '';
         if (device.schemaKey === 'features_1280') {
-            kernelLinksHeader.textContent = 'Floppy1280 links';
+            kernelName = 'Floppy1280';
             kernelLinks = [
                 { icon: 'github', text: 'Floppy1280 repository', url: 'https://github.com/FlopKernel-Series/flop_s5e8825_kernel' },
                 { icon: 'telegram', text: 'Floppy1280 channel', url: 'https://t.me/Floppy1280' },
                 { icon: 'telegram', text: 'Floppy1280 group', url: 'https://t.me/Floppy1280_Chat' }
             ];
         } else if (device.schemaKey === 'features_trinket') {
-            kernelLinksHeader.textContent = 'FloppyTrinketMi links';
+            kernelName = 'FloppyTrinketMi';
             kernelLinks = [
                 { icon: 'github', text: 'FloppyTrinketMi repository', url: 'https://github.com/FlopKernel-Series/flop_trinket-mi_kernel' },
                 { icon: 'telegram', text: 'FloppyTrinketMi channel', url: 'https://t.me/FloppyTrinketMi' },
                 { icon: 'telegram', text: 'FloppyTrinketMi group', url: 'https://t.me/FloppyTrinketMi_Chat' }
             ];
+        }
+
+        if (kernelName) {
+            kernelLinksHeader.textContent = t('about.kernelLinksTemplate', { name: kernelName });
         }
 
         if (kernelLinks.length > 0) {
@@ -309,10 +354,10 @@ async function init() {
                 e.target.checked = false; // Reset until confirmed
 
                 const confirmed = await showConfirmModal({
-                    title: 'Experimental Features',
-                    body: '<p>Features exposed by enabling this toggle might be unfinished, unsupported, or dangerous.</p><p><strong>Proceed with caution.</strong></p>',
+                    title: t('modal.experimentalTitle'),
+                    body: t('modal.experimentalBody'),
                     iconClass: 'warning',
-                    confirmText: 'Enable'
+                    confirmText: t('modal.enable')
                 });
 
                 if (confirmed) {
@@ -330,10 +375,10 @@ async function init() {
         readonlyPatchToggle.addEventListener('change', async (e) => {
             if (e.target.checked) {
                 const confirmed = await showConfirmModal({
-                    title: 'Allow Read-Only Patching?',
-                    body: '<p>This allows patching features marked as read-only.</p><p><strong>Use only for testing. Changes will NOT be saved.</strong></p>',
+                    title: t('modal.readonlyTitle'),
+                    body: t('modal.readonlyBody'),
                     iconClass: 'warning',
-                    confirmText: 'Enable'
+                    confirmText: t('modal.enable')
                 });
 
                 if (confirmed) {
@@ -436,6 +481,56 @@ async function init() {
     if (btnSaveDmesg) {
         btnSaveDmesg.addEventListener('click', () => saveLog('dmesg'));
     }
+
+    // --- Translation Credits ---
+    const translationCreditsList = document.getElementById('translation-credits-list');
+    if (translationCreditsList) {
+        try {
+            const response = await fetch('credits.json');
+            if (response.ok) {
+                const creditsData = await response.json();
+                renderTranslationCredits(translationCreditsList, creditsData);
+            }
+        } catch (e) {
+            console.error('Failed to load credits:', e);
+        }
+    }
+}
+
+function renderTranslationCredits(container, data) {
+    if (!data.translations || Object.keys(data.translations).length === 0) {
+        container.innerHTML = '<p class="credits-empty">No translation credits yet.</p>';
+        return;
+    }
+
+    let html = '';
+    for (const [langCode, langData] of Object.entries(data.translations)) {
+        html += `<div class="credits-language">`;
+        html += `<h4 class="credits-lang-name">${langData.name}</h4>`;
+        html += `<ul class="credits-list">`;
+        for (const contributor of langData.contributors) {
+            if (contributor.url) {
+                html += `<li><a href="#" class="credits-link" data-url="${contributor.url}">${contributor.name}</a></li>`;
+            } else {
+                html += `<li>${contributor.name}</li>`;
+            }
+        }
+        html += `</ul></div>`;
+    }
+    container.innerHTML = html;
+
+    // Add click handlers for links
+    container.querySelectorAll('.credits-link').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = a.dataset.url;
+            if (window.exec) {
+                window.exec(`am start -a android.intent.action.VIEW -d "${url}"`);
+            } else {
+                window.open(url, '_blank');
+            }
+        });
+    });
 }
 
 // Start
