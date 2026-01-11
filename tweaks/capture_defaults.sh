@@ -60,6 +60,25 @@ cat > "$OUTPUT_FILE" << EOF
       "stat_interval": "$(cat /proc/sys/vm/stat_interval 2>/dev/null || echo 1)",
       "vfs_cache_pressure": "$(cat /proc/sys/vm/vfs_cache_pressure 2>/dev/null || echo 100)",
       "watermark_scale_factor": "$(cat /proc/sys/vm/watermark_scale_factor 2>/dev/null || echo 10)"
+    },
+    "iosched": {
+$(
+if [ -f "$MODDIR/tweaks/iosched.sh" ]; then
+    sh "$MODDIR/tweaks/iosched.sh" get_all | \
+    awk '
+    BEGIN { first=1 }
+    /^device=/ { 
+        dev=substr($0, 8) 
+    }
+    /^active=/ { 
+        sched=substr($0, 8)
+        if (!first) printf ",\n"
+        printf "      \"%s\": \"%s\"", dev, sched
+        first=0
+    }
+    '
+fi
+)
     }
   }
 }

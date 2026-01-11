@@ -1613,6 +1613,9 @@ body {
 .tweak-subsection .tweak-section-header {
     margin-top: 0;
     padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .tweak-subsection .tweak-row:last-child {

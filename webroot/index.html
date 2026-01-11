@@ -505,6 +505,31 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- I/O Scheduler Card -->
+                    <div id="iosched-card" class="card tweak-card">
+                        <div class="card-header">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zm6 12c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-5c0 .5-2.13 2-6 2s-6-1.5-6-2V9.77c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V12z" />
+                            </svg>
+                            <span class="card-title">I/O Scheduler</span>
+                            <span id="iosched-pending-indicator" class="pending-indicator hidden">Unsaved</span>
+                        </div>
+                        <div class="card-content">
+                            <div id="iosched-devices-container" class="tweak-container">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="tweak-actions">
+                                <button class="tweak-action-btn secondary" id="iosched-btn-save">Save</button>
+                                <button class="tweak-action-btn secondary" id="iosched-btn-apply">Apply</button>
+                                <button class="tweak-action-btn primary" id="iosched-btn-save-apply">Save &
+                                    Apply</button>
+                            </div>
+                        </div>
+                    </div>
                 </div> <!-- End Inner Container -->
             </div> <!-- End Tab Tweaks -->
 
