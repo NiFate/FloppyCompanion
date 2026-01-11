@@ -226,17 +226,19 @@ function renderFeatures(schema, procCmdline) {
 
         // --- Switch Construction ---
         let headerControl = '';
-        if (item.type !== 'info' || allowReadonlyPatch) {
-            headerControl = `
-                <label class="m3-switch" style="display:inline-block; margin:0;">
-                    <input type="checkbox" id="switch-${item.key}" ${isOn ? 'checked' : ''} 
-                        onchange="updateFeature('${item.key}', this.checked ? '${defaultVal}' : '0', this)">
-                    <span class="m3-switch-track">
-                         <span class="m3-switch-thumb"></span>
-                    </span>
-                </label>
-            `;
-        }
+        // Allow switch for all types, but disable strictly for info if not allowed
+        const isInfo = item.type === 'info';
+        const isReadOnly = isInfo && !allowReadonlyPatch;
+
+        headerControl = `
+            <label class="m3-switch" style="display:inline-block; margin:0; ${isReadOnly ? 'opacity: 0.5; pointer-events: none;' : ''}">
+                <input type="checkbox" id="switch-${item.key}" ${isOn ? 'checked' : ''} ${isReadOnly ? 'disabled' : ''}
+                    onchange="updateFeature('${item.key}', this.checked ? '${defaultVal}' : '0', this)">
+                <span class="m3-switch-track">
+                     <span class="m3-switch-thumb"></span>
+                </span>
+            </label>
+        `;
 
         let bodyControls = '';
 
