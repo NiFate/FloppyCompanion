@@ -506,6 +506,98 @@ body {
     vertical-align: middle;
 }
 
+.icon-svg-small {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* Action Buttons (Tools Card) */
+.action-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.action-row:last-child {
+    margin-bottom: 0;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface-variant);
+    border: none;
+    border-radius: var(--md-sys-shape-corner-medium);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.action-button:active {
+    transform: scale(0.97);
+    background-color: var(--md-sys-color-outline);
+    color: var(--md-sys-color-on-surface);
+}
+
+.info-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color 0.2s;
+}
+
+.info-button:active {
+    background-color: var(--md-sys-color-surface-variant);
+}
+
+.info-button .icon-svg-small {
+    margin-right: 0;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    padding: 12px 20px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+    max-width: 80%;
+    text-align: center;
+}
+
+.toast.visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast.error {
+    background-color: #d32f2f;
+    color: white;
+}
+
 /* Utilities */
 .hidden {
     display: none !important;

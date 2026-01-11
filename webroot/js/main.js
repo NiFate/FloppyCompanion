@@ -379,6 +379,61 @@ async function init() {
             }
         });
     }
+
+    // --- Log Export Buttons ---
+    const btnSaveLastKmsg = document.getElementById('btn-save-lastkmsg');
+    const btnSaveDmesg = document.getElementById('btn-save-dmesg');
+
+    // Toast notification helper
+    function showToast(message, isError = false) {
+        // Remove existing toast
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast' + (isError ? ' error' : '');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        // Trigger animation
+        setTimeout(() => toast.classList.add('visible'), 10);
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            toast.classList.remove('visible');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    async function saveLog(type) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const filename = `/sdcard/${type}_${timestamp}.log`;
+        let cmd;
+
+        if (type === 'last_kmsg') {
+            cmd = `cp /proc/last_kmsg "${filename}"`;
+        } else {
+            cmd = `dmesg > "${filename}"`;
+        }
+
+        const result = await exec(cmd);
+
+        // Check if file was created
+        const check = await exec(`[ -f "${filename}" ] && echo "ok"`);
+        if (check && check.trim() === 'ok') {
+            showToast(`Saved to ${filename}`);
+        } else {
+            showToast(`Failed to save ${type}`, true);
+        }
+    }
+
+    if (btnSaveLastKmsg) {
+        btnSaveLastKmsg.addEventListener('click', () => saveLog('last_kmsg'));
+    }
+
+    if (btnSaveDmesg) {
+        btnSaveDmesg.addEventListener('click', () => saveLog('dmesg'));
+    }
 }
 
 // Start
