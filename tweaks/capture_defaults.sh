@@ -22,9 +22,12 @@ if [ -n "$ZRAM_DEV" ]; then
     ZRAM_ALGO=$(echo "$ZRAM_ALGO_FULL" | grep -o '\[.*\]' | tr -d '[]')
     [ -z "$ZRAM_ALGO" ] && ZRAM_ALGO=$(echo "$ZRAM_ALGO_FULL" | awk '{print $1}')
     
-    # Check if swap is enabled
+    # Check if swap is enabled (or configured)
     ZRAM_ENABLED=0
-    if swapon 2>/dev/null | grep -q zram0; then
+    # If disksize is non-zero, consider it enabled (available) even if not currently swapped on
+    if [ "$ZRAM_DISKSIZE" -gt 0 ] 2>/dev/null; then
+        ZRAM_ENABLED=1
+    elif swapon 2>/dev/null | grep -q zram0; then
         ZRAM_ENABLED=1
     fi
 else

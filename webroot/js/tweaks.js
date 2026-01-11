@@ -47,6 +47,11 @@ async function loadZramState() {
         zramCurrentState = parseKeyValue(currentOutput);
         zramSavedState = parseKeyValue(savedOutput);
 
+        // Sanitize saved state: treat empty values as undefined
+        Object.keys(zramSavedState).forEach(key => {
+            if (zramSavedState[key] === '') delete zramSavedState[key];
+        });
+
         // Initialize pending state from saved if available, else from current
         zramPendingState = {
             disksize: zramSavedState.disksize || zramCurrentState.disksize || '0',
@@ -364,7 +369,12 @@ async function loadMemoryState() {
         memoryCurrentState = parseKeyValue(currentOutput);
         memorySavedState = parseKeyValue(savedOutput);
 
-        // Initialize pending state
+        // Sanitize
+        Object.keys(memorySavedState).forEach(key => {
+            if (memorySavedState[key] === '') delete memorySavedState[key];
+        });
+
+        // Initialize pending
         memoryPendingState = { ...memoryCurrentState, ...memorySavedState };
 
         // Determine initial Dirty Mode
