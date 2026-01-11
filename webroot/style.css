@@ -1624,9 +1624,9 @@ body {
     border-bottom: none;
 }
 
-/* Translation Credits */
+/* Translation & Project Credits */
 .credits-language {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 }
 
 .credits-language:last-child {
@@ -1634,31 +1634,52 @@ body {
 }
 
 .credits-lang-name {
-    margin: 0 0 8px 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface);
+    margin: 0;
+    padding: 0 0 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--md-sys-color-primary);
 }
 
 .credits-list {
     margin: 0;
-    padding: 0 0 0 20px;
-    list-style-type: disc;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .credits-list li {
-    margin-bottom: 4px;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
     font-size: 14px;
     color: var(--md-sys-color-on-surface);
 }
 
+.credits-list li:last-child {
+    border-bottom: none;
+}
+
 .credits-link {
-    color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-surface);
     text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
 }
 
 .credits-link:hover {
-    text-decoration: underline;
+    color: var(--md-sys-color-primary);
+}
+
+.credits-role {
+    margin-left: 6px;
+    font-size: 13px;
+    color: var(--md-sys-color-on-surface-variant);
 }
 
 .credits-empty {
@@ -1666,4 +1687,6 @@ body {
     font-size: 14px;
     color: var(--md-sys-color-on-surface-variant);
     font-style: italic;
+    text-align: center;
+    padding: 16px;
 }
