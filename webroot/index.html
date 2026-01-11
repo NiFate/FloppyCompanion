@@ -240,10 +240,112 @@
                     <header class="hero">
                         <h1 class="hero-title">Tweaks</h1>
                     </header>
-                    <div class="card">
+
+                    <!-- Preset Bar -->
+                    <div class="preset-bar">
+                        <div class="preset-selector-row">
+                            <span class="preset-label">Preset:</span>
+                            <select id="preset-selector" class="preset-selector">
+                                <option value="Default">Default</option>
+                            </select>
+                        </div>
+                        <div class="preset-actions">
+                            <button class="preset-btn" id="preset-load-btn" title="Load selected preset">
+                                <svg class="icon-svg-small" viewBox="0 0 24 24">
+                                    <path
+                                        d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+                                </svg>
+                            </button>
+                            <button class="preset-btn" id="preset-save-btn" title="Save current settings as preset">
+                                <svg class="icon-svg-small" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
+                                </svg>
+                            </button>
+                            <button class="preset-btn" id="preset-import-btn" title="Import preset from file">
+                                <svg class="icon-svg-small" viewBox="0 0 24 24">
+                                    <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
+                                </svg>
+                            </button>
+                            <button class="preset-btn" id="preset-export-btn" title="Export preset to file" disabled>
+                                <svg class="icon-svg-small" viewBox="0 0 24 24">
+                                    <path
+                                        d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Common Tweaks Section -->
+                    <h2 class="section-title">Common Tweaks</h2>
+
+                    <!-- ZRAM Card -->
+                    <div id="zram-card" class="card tweak-card">
+                        <div class="card-header">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path
+                                    d="M15 9H9v6h6V9zm-2 4h-2v-2h2v2zm8-2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2zm-4 6H7V7h10v10z" />
+                            </svg>
+                            <span class="card-title">ZRAM</span>
+                            <span id="zram-pending-indicator" class="pending-indicator hidden">Unsaved</span>
+                        </div>
                         <div class="card-content">
-                            <p style="text-align: center; color: var(--md-sys-color-on-surface-variant);">Coming Soon...
-                            </p>
+                            <!-- Enable/Disable Toggle -->
+                            <div class="tweak-toggle-row">
+                                <span class="toggle-label">Enable ZRAM</span>
+                                <div class="m3-switch">
+                                    <input type="checkbox" id="zram-enable-toggle" checked>
+                                    <span class="m3-switch-track">
+                                        <span class="m3-switch-thumb"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Disk Size Section -->
+                            <div id="zram-options" class="tweak-section">
+                                <h3 class="tweak-section-title">Disk Size</h3>
+                                <div class="option-grid" id="zram-size-options">
+                                    <button class="option-btn" data-size="1610612736">1536 MiB</button>
+                                    <button class="option-btn" data-size="2147483648">2048 MiB</button>
+                                    <button class="option-btn" data-size="3221225472">3072 MiB</button>
+                                    <button class="option-btn" data-size="4294967296">4096 MiB</button>
+                                    <button class="option-btn" data-size="6442450944">6144 MiB</button>
+                                    <button class="option-btn" data-size="8589934592">8192 MiB</button>
+                                    <button class="option-btn" id="zram-size-custom-btn"
+                                        data-size="custom">Custom</button>
+                                </div>
+                                <div id="zram-custom-input-row" class="custom-input-row hidden">
+                                    <input type="number" id="zram-custom-size" min="1" max="65536"
+                                        placeholder="Enter size">
+                                    <span class="input-suffix">MiB</span>
+                                </div>
+
+                                <!-- Algorithm Section -->
+                                <h3 class="tweak-section-title">Compression Algorithm</h3>
+                                <div class="option-grid" id="zram-algo-options">
+                                    <!-- Populated dynamically -->
+                                </div>
+
+                                <!-- Active Values -->
+                                <div class="current-values">
+                                    <div class="value-row">
+                                        <span class="value-label">Active disksize</span>
+                                        <span class="value-data" id="zram-current-disksize">--</span>
+                                    </div>
+                                    <div class="value-row">
+                                        <span class="value-label">Active algorithm</span>
+                                        <span class="value-data" id="zram-current-algorithm">--</span>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="tweak-actions">
+                                    <button class="tweak-action-btn secondary" id="zram-btn-save">Save</button>
+                                    <button class="tweak-action-btn secondary" id="zram-btn-apply">Apply</button>
+                                    <button class="tweak-action-btn primary" id="zram-btn-save-apply">Save &
+                                        Apply</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div> <!-- End Inner Container -->
@@ -341,6 +443,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn-text" id="confirm-modal-cancel">Cancel</button>
+                <button class="btn-tonal hidden" id="confirm-modal-extra">Extra</button>
                 <button class="btn-filled" id="confirm-modal-confirm">Confirm</button>
             </div>
         </div>
@@ -388,6 +491,8 @@
     <script src="js/device.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/features.js"></script>
+    <script src="js/presets.js"></script>
+    <script src="js/tweaks.js"></script>
     <script src="js/main.js"></script>
 </body>
 

@@ -63,7 +63,8 @@ window.showConfirmModal = function (options = {}) {
             icon = '<svg viewBox="0 0 24 24" width="48" height="48"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>',
             iconClass = '',
             confirmText = 'Confirm',
-            cancelText = 'Cancel'
+            cancelText = 'Cancel',
+            extraButton = null // { text: 'Extra', value: 'extra' }
         } = options;
 
         confirmModalTitle.textContent = title;
@@ -74,9 +75,18 @@ window.showConfirmModal = function (options = {}) {
         // Query buttons fresh each time
         let cancelBtn = document.getElementById('confirm-modal-cancel');
         let confirmBtn = document.getElementById('confirm-modal-confirm');
+        let extraBtn = document.getElementById('confirm-modal-extra');
 
         cancelBtn.textContent = cancelText;
         confirmBtn.textContent = confirmText;
+
+        // Handle extra button
+        if (extraButton && extraBtn) {
+            extraBtn.textContent = extraButton.text;
+            extraBtn.classList.remove('hidden');
+        } else if (extraBtn) {
+            extraBtn.classList.add('hidden');
+        }
 
         confirmModal.classList.remove('hidden');
 
@@ -95,6 +105,17 @@ window.showConfirmModal = function (options = {}) {
             confirmModal.classList.add('hidden');
             resolve(true);
         });
+
+        // Handle extra button
+        if (extraButton && extraBtn) {
+            const newExtra = extraBtn.cloneNode(true);
+            extraBtn.parentNode.replaceChild(newExtra, extraBtn);
+            newExtra.classList.remove('hidden');
+            newExtra.addEventListener('click', () => {
+                confirmModal.classList.add('hidden');
+                resolve(extraButton.value || 'extra');
+            });
+        }
     });
 };
 
