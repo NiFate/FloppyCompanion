@@ -1372,9 +1372,20 @@ async function applyThermal() {
     const mode = thermalPendingState.mode;
     const customFreq = thermalPendingState.custom_freq || '';
 
-    await runThermalBackend('apply', mode, customFreq);
-    await loadThermalState(); // Refresh from backend
-    showToast(window.t ? window.t('toast.settingsApplied') : 'Settings applied');
+    try {
+        await runThermalBackend('apply', mode, customFreq);
+
+        // Reload only the *current* state so active values update,
+        // but do NOT reset pending state back to saved/current.
+        const currentOutput = await runThermalBackend('get_current');
+        thermalCurrentState = parseKeyValue(currentOutput);
+
+        renderThermalCard();
+        showToast(window.t ? window.t('toast.settingsApplied') : 'Settings applied');
+    } catch (e) {
+        console.error('Failed to apply thermal settings:', e);
+        showToast(window.t ? window.t('toast.settingsFailed') : 'Failed to apply settings', true);
+    }
 }
 
 // Initialize Thermal tweak UI
@@ -1564,7 +1575,22 @@ async function applyMisc() {
     await runMiscBackend('apply', 'gpu_clklck', miscPendingState.gpu_clklck);
     await runMiscBackend('apply', 'gpu_unlock', miscPendingState.gpu_unlock);
 
-    await loadMiscState(); // Refresh from backend
+    // Refresh only current kernel state so active values update,
+    // but do NOT reset pending state back to saved.
+    const currentOutput = await runMiscBackend('get_current');
+    if (!currentOutput) {
+        showToast(window.t ? window.t('toast.settingsFailed') : 'Failed to apply settings', true);
+        return;
+    }
+
+    const current = parseKeyValue(currentOutput);
+    miscCurrentState = {
+        block_ed3: current.block_ed3 || '0',
+        gpu_clklck: current.gpu_clklck || '0',
+        gpu_unlock: current.gpu_unlock || '0'
+    };
+
+    renderMiscCard();
     showToast(window.t ? window.t('toast.settingsApplied') : 'Applied');
 }
 
@@ -1756,7 +1782,23 @@ async function saveSoundControl() {
 
 async function applySoundControl() {
     await runSoundControlBackend('apply', scPendingState.hp_l, scPendingState.hp_r, scPendingState.mic);
-    await loadSoundControlState(); // Refresh from backend
+
+    // Refresh only current kernel state so active values update,
+    // but do NOT reset pending state back to saved.
+    const currentOutput = await runSoundControlBackend('get_current');
+    if (!currentOutput) {
+        showToast(window.t ? window.t('toast.settingsFailed') : 'Failed to apply settings', true);
+        return;
+    }
+
+    const current = parseKeyValue(currentOutput);
+    scCurrentState = {
+        hp_l: current.hp_l || '0',
+        hp_r: current.hp_r || '0',
+        mic: current.mic || '0'
+    };
+
+    renderSoundControlCard();
     showToast(window.t ? window.t('toast.settingsApplied') : 'Applied');
 }
 
