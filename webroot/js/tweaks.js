@@ -250,25 +250,6 @@ function findTweakDef(schema, id) {
 function resolveControlRulesForCard(cardDef) {
     if (!cardDef) return [];
     if (Array.isArray(cardDef.controlRules)) return cardDef.controlRules;
-
-    // Back-compat: older drafts used { controlRequires: { name: requiresRule } }.
-    if (cardDef.controlRequires && typeof cardDef.controlRequires === 'object') {
-        const rules = [];
-        for (const [key, requires] of Object.entries(cardDef.controlRequires)) {
-            // Minimal legacy support for known controls.
-            if (cardDef.id === 'misc' && key === 'gpu_unlock') {
-                rules.push({
-                    id: key,
-                    selector: '#misc-gpuunlock-switch',
-                    mode: 'disable',
-                    dimClosest: '.tweak-switch-container',
-                    requires
-                });
-            }
-        }
-        return rules;
-    }
-
     return [];
 }
 
