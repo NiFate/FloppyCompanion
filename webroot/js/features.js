@@ -169,6 +169,26 @@ function renderFeatures(schema, procCmdline) {
 
     featuresContainer.innerHTML = '';
 
+    const getIconPath = function (name, fallback) {
+        const def = window.FC && window.FC.icons && window.FC.icons.get ? window.FC.icons.get(name) : null;
+        const p = def && def.paths && def.paths[0] ? def.paths[0] : null;
+        const d = typeof p === 'string' ? p : (p && p.d ? p.d : '');
+        return d || fallback || '';
+    };
+
+    const rebootIconPath = getIconPath(
+        'reboot',
+        'M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'
+    );
+    const infoIconPath = getIconPath(
+        'info',
+        'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'
+    );
+    const warningTrianglePath = getIconPath(
+        'warning',
+        'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'
+    );
+
     if (!schema || schema.length === 0) {
         featuresContainer.innerHTML = '<p class="text-center p-4">No features defined for this device.</p>';
         return;
@@ -209,7 +229,7 @@ function renderFeatures(schema, procCmdline) {
             statusIconsHtml += `
                 <div class="status-icon-wrapper" style="position:relative;">
                     <svg class="status-icon reboot" onclick="toggleBubble('${bubbleId}', event)" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                        <path fill="currentColor" d="${rebootIconPath}"/>
                     </svg>
                     <div id="${bubbleId}" class="status-bubble hidden">
                         ${t('features.tooltipReboot')}
@@ -227,7 +247,7 @@ function renderFeatures(schema, procCmdline) {
             statusIconsHtml += `
                 <div class="status-icon-wrapper" style="position:relative;">
                     <svg class="status-icon warning" onclick="toggleBubble('${bubbleId}', event)" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        <path fill="currentColor" d="${infoIconPath}"/>
                     </svg>
                     <div id="${bubbleId}" class="status-bubble hidden">
                         ${bubbleText}
@@ -271,7 +291,7 @@ function renderFeatures(schema, procCmdline) {
             const optionsHtml = visibleOptions.map(opt => {
                 const isSelected = (currentVal === opt.val);
                 const selectedClass = isSelected ? 'selected' : '';
-                const expBadge = opt.experimental ? `<span class="experimental-badge" title="${t('features.tooltipExperimental') || 'Experimental'}"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="#F44336" d="M4.47 21h15.06c1.54 0 2.5-1.67 1.73-3L13.73 4.99c-.77-1.33-2.69-1.33-3.46 0L2.74 18c-.77 1.33.19 3 1.73 3zM12 14c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"/></svg></span>` : '';
+                const expBadge = opt.experimental ? `<span class="experimental-badge" title="${t('features.tooltipExperimental') || 'Experimental'}"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="#F44336" d="${warningTrianglePath}"/></svg></span>` : '';
 
                 return `
                 <div class="option-item ${selectedClass}" 
@@ -300,7 +320,7 @@ function renderFeatures(schema, procCmdline) {
         const currentValueHtml = `<div class="current-value-display">Current: ${displayValText}</div>`;
 
         // Feature-level experimental badge
-        const featureExpBadge = item.experimental ? `<span class="experimental-badge" title="${t('features.tooltipExperimental') || 'Experimental'}"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#F44336" d="M4.47 21h15.06c1.54 0 2.5-1.67 1.73-3L13.73 4.99c-.77-1.33-2.69-1.33-3.46 0L2.74 18c-.77 1.33.19 3 1.73 3zM12 14c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm1 4h-2v-2h2v2z"/></svg></span>` : '';
+        const featureExpBadge = item.experimental ? `<span class="experimental-badge" title="${t('features.tooltipExperimental') || 'Experimental'}"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#F44336" d="${warningTrianglePath}"/></svg></span>` : '';
 
         // Render
         el.innerHTML = `
@@ -389,7 +409,6 @@ async function applyChanges() {
     const proceed = await showConfirmModal({
         title: t('modal.applyChangesTitle'),
         body: t('modal.applyChangesBody'),
-        icon: '<svg viewBox="0 0 24 24" width="48" height="48"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="currentColor"/></svg>',
         iconClass: 'warning',
         confirmText: t('modal.apply'),
         cancelText: t('modal.cancel')

@@ -6,6 +6,11 @@ async function init() {
         await I18N.init();
     }
 
+    // Populate any <svg data-icon="..."> placeholders from the icon registry.
+    if (window.FC && window.FC.icons && typeof window.FC.icons.applyDataIcons === 'function') {
+        window.FC.icons.applyDataIcons(document);
+    }
+
     // --- Language Dropdown Logic ---
     const langBtn = document.getElementById('lang-btn');
     const langMenu = document.getElementById('lang-menu');
@@ -58,27 +63,19 @@ async function init() {
 
     function updateThemeIcon(mode) {
         if (!themeBtn) return;
-        let iconPath = '';
-        /* 
-           Auto: Computer/System icon
-           Light: Sun
-           Dark: Moon
-        */
-        if (mode === 'auto') {
-            // Custom Auto Icon: Sun Rays + Bold Sans-Serif 'A'
-            // Outer: M11 9 H13 L15.2 15.5 H13.2 L12.7 14 H11.3 L10.8 15.5 H8.8 Z
-            // Hole: M12 10.5 L12.3 12.5 H11.7 Z
-            // Rays Path: Copied from Light icon (segments 2+)
-            iconPath = 'M11 9 H13 L15.2 15.5 H13.2 L12.7 14 H11.3 L10.8 15.5 H8.8 Z M12 10.5 L12.3 12.5 H11.7 Z M2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z';
-        } else if (mode === 'light') {
-            // Sun Icon
-            iconPath = 'M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z';
-        } else {
-            // Moon Icon (Feather Icons - Clean C-Shape)
-            iconPath = 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z';
+        const iconName = mode === 'auto' ? 'theme_auto' : (mode === 'light' ? 'theme_light' : 'theme_dark');
+        const svg = themeBtn.querySelector('svg');
+
+        if (svg && window.FC && window.FC.icons && window.FC.icons.applyToSvg) {
+            window.FC.icons.applyToSvg(svg, iconName, { fill: 'currentColor' });
+            return;
         }
 
-        themeBtn.querySelector('path').setAttribute('d', iconPath);
+        // Fallback: keep the existing markup and only update the first path.
+        const def = window.FC && window.FC.icons && window.FC.icons.get ? window.FC.icons.get(iconName) : null;
+        const d = def && def.paths && def.paths[0] ? (typeof def.paths[0] === 'string' ? def.paths[0] : def.paths[0].d) : '';
+        const pathEl = themeBtn.querySelector('path');
+        if (pathEl && d) pathEl.setAttribute('d', d);
     }
 
     if (themeBtn) {

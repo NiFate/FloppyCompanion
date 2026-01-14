@@ -62,7 +62,8 @@ window.showConfirmModal = function (options = {}) {
         const {
             title = 'Confirmation',
             body = 'Are you sure?',
-            icon = '<svg viewBox="0 0 24 24" width="48" height="48"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>',
+            icon = null,
+            iconName = null,
             iconClass = '',
             confirmText = 'Confirm',
             cancelText = 'Cancel',
@@ -71,7 +72,28 @@ window.showConfirmModal = function (options = {}) {
 
         confirmModalTitle.textContent = title;
         confirmModalBody.innerHTML = body;
-        confirmModalIcon.innerHTML = icon;
+
+        let resolvedIcon = icon;
+        if (!resolvedIcon) {
+            let name = iconName;
+            if (!name) {
+                if (iconClass === 'warning') name = 'warning';
+                else if (iconClass === 'info') name = 'info';
+                else if (iconClass === 'success') name = 'success';
+                else name = 'check_circle';
+            }
+
+            if (window.FC && window.FC.icons && window.FC.icons.svgString) {
+                resolvedIcon = window.FC.icons.svgString(String(name), { width: 48, height: 48, fill: 'currentColor' });
+            }
+        }
+
+        if (!resolvedIcon) {
+            // Hard fallback if icons registry is unavailable.
+            resolvedIcon = '<svg viewBox="0 0 24 24" width="48" height="48"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/></svg>';
+        }
+
+        confirmModalIcon.innerHTML = resolvedIcon;
         confirmModalIcon.className = 'modal-icon' + (iconClass ? ' ' + iconClass : '');
 
         // Query buttons fresh each time
