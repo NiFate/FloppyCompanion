@@ -146,13 +146,15 @@
                                     <svg class="icon-svg-small" viewBox="0 0 24 24" data-icon="download"></svg>
                                     <span data-i18n="home.saveLastKmsg">Save last_kmsg</span>
                                 </button>
-                                <button class="info-button" onclick="toggleBubble('bubble-lastkmsg', event)">
-                                    <svg class="icon-svg-small" viewBox="0 0 24 24" data-icon="info"></svg>
-                                </button>
-                                <div id="bubble-lastkmsg" class="status-bubble hidden" data-i18n="home.lastKmsgDesc">
-                                    last_kmsg contains a dmesg + bootloader log of the last time your device was
-                                    rebooted (intentionally or through a crash). It's useful for diagnosing kernel
-                                    panics and crashes.
+                                <div class="status-icon-wrapper">
+                                    <svg class="status-icon info" onclick="toggleBubble('bubble-lastkmsg', event)" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                                    </svg>
+                                    <div id="bubble-lastkmsg" class="status-bubble center hidden" data-i18n="home.lastKmsgDesc">
+                                        last_kmsg contains a dmesg + bootloader log of the last time your device was
+                                        rebooted (intentionally or through a crash). It's useful for diagnosing kernel
+                                        panics and crashes.
+                                    </div>
                                 </div>
                             </div>
                             <!-- Save dmesg -->
@@ -161,11 +163,13 @@
                                     <svg class="icon-svg-small" viewBox="0 0 24 24" data-icon="download"></svg>
                                     <span data-i18n="home.saveDmesg">Save dmesg</span>
                                 </button>
-                                <button class="info-button" onclick="toggleBubble('bubble-dmesg', event)">
-                                    <svg class="icon-svg-small" viewBox="0 0 24 24" data-icon="info"></svg>
-                                </button>
-                                <div id="bubble-dmesg" class="status-bubble hidden" data-i18n="home.dmesgDesc">
-                                    dmesg contains a log of the currently running kernel.
+                                <div class="status-icon-wrapper">
+                                    <svg class="status-icon info" onclick="toggleBubble('bubble-dmesg', event)" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                                    </svg>
+                                    <div id="bubble-dmesg" class="status-bubble center hidden" data-i18n="home.dmesgDesc">
+                                        dmesg contains a log of the currently running kernel.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -386,8 +390,8 @@
                                 <div class="tweak-info-col">
                                     <span class="tweak-label">
                                         <span data-i18n="tweaks.misc.blockEd3">Block Ear Detect Mode 3</span>
-                                        <div class="status-icon-wrapper" style="position:relative; display:inline-block; vertical-align:middle; margin-left:8px;">
-                                            <svg class="status-icon info" onclick="toggleBubble('bubble-misc-blocked3', event)" viewBox="0 0 24 24" data-icon="info_outline" style="width:16px;height:16px;cursor:pointer;color:var(--md-sys-color-primary);"></svg>
+                                        <div class="status-icon-wrapper">
+                                            <svg class="status-icon info small" onclick="toggleBubble('bubble-misc-blocked3', event)" data-icon="info_outline"></svg>
                                             <div id="bubble-misc-blocked3" class="status-bubble left hidden" data-i18n="tweaks.tooltip.blockEd3"></div>
                                         </div>
                                     </span>
@@ -404,8 +408,8 @@
                                 <div class="tweak-info-col">
                                     <span class="tweak-label">
                                         <span data-i18n="tweaks.misc.gpuClkLock">GPU Clock Lock</span>
-                                        <div class="status-icon-wrapper" style="position:relative; display:inline-block; vertical-align:middle; margin-left:8px;">
-                                            <svg class="status-icon info" onclick="toggleBubble('bubble-misc-gpuclklck', event)" viewBox="0 0 24 24" data-icon="info_outline" style="width:16px;height:16px;cursor:pointer;color:var(--md-sys-color-primary);"></svg>
+                                        <div class="status-icon-wrapper">
+                                            <svg class="status-icon info small" onclick="toggleBubble('bubble-misc-gpuclklck', event)" data-icon="info_outline"></svg>
                                             <div id="bubble-misc-gpuclklck" class="status-bubble left hidden" data-i18n="tweaks.tooltip.gpuClkLock"></div>
                                         </div>
                                     </span>
@@ -422,8 +426,8 @@
                                 <div class="tweak-info-col">
                                     <span class="tweak-label">
                                         <span data-i18n="tweaks.misc.gpuUnlock">GPU Overclock</span>
-                                        <div class="status-icon-wrapper" style="position:relative; display:inline-block; vertical-align:middle; margin-left:8px;">
-                                            <svg class="status-icon info" onclick="toggleBubble('bubble-misc-gpuunlock', event)" viewBox="0 0 24 24" data-icon="info_outline" style="width:16px;height:16px;cursor:pointer;color:var(--md-sys-color-primary);"></svg>
+                                        <div class="status-icon-wrapper">
+                                            <svg class="status-icon info small" onclick="toggleBubble('bubble-misc-gpuunlock', event)" data-icon="info_outline"></svg>
                                             <div id="bubble-misc-gpuunlock" class="status-bubble left hidden" data-i18n="tweaks.tooltip.gpuUnlock"></div>
                                         </div>
                                     </span>

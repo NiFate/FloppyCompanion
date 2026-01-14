@@ -301,6 +301,9 @@ body.theme-detect-anim .nav-item .icon {
 .status-icon-wrapper {
     position: relative;
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
 }
 
 .status-icon {
@@ -309,10 +312,23 @@ body.theme-detect-anim .nav-item .icon {
     cursor: pointer;
     opacity: 0.8;
     transition: opacity 0.2s;
+    display: block;
 }
 
 .status-icon:hover {
     opacity: 1;
+}
+
+/* Tooltip/info icons are intentionally smaller than status icons */
+.status-icon.info {
+    width: 18px;
+    height: 18px;
+    color: var(--md-sys-color-primary);
+}
+
+.status-icon.info.small {
+    width: 16px;
+    height: 16px;
 }
 
 .status-icon {

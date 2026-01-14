@@ -90,11 +90,10 @@ function buildTweakCardShell(card) {
     if (card.tooltipKey) {
         const wrapper = document.createElement('div');
         wrapper.className = 'status-icon-wrapper';
-        wrapper.setAttribute('style', 'position:relative; display:inline-block; vertical-align:middle; margin-left:8px;');
 
         const bubbleId = `${card.cardId}-bubble`;
         wrapper.innerHTML = `
-            <svg class="status-icon info" onclick="toggleBubble('${bubbleId}', event)" viewBox="0 0 24 24" style="width:18px;height:18px;cursor:pointer;color:var(--md-sys-color-primary);">
+            <svg class="status-icon info" onclick="toggleBubble('${bubbleId}', event)" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
             </svg>
             <div id="${bubbleId}" class="status-bubble center hidden" data-i18n="${card.tooltipKey}"></div>
