@@ -99,6 +99,13 @@ fi
       "hp_l": "$(cat /sys/kernel/sound_control/headphone_gain 2>/dev/null | awk '{print $1}' || echo 0)",
       "hp_r": "$(cat /sys/kernel/sound_control/headphone_gain 2>/dev/null | awk '{print $2}' || echo 0)",
       "mic": "$(cat /sys/kernel/sound_control/mic_gain 2>/dev/null || echo 0)"
+    },
+    "bypass_charging": {
+      "enabled": "$(cat /sys/class/power_supply/battery/input_suspend 2>/dev/null || echo 0)"
+    },
+    "display": {
+      "hbm": "$(cat /sys/devices/platform/soc/soc:qcom,dsi-display/hbm 2>/dev/null || echo 0)",
+      "cabc": "$(cat /sys/devices/platform/soc/soc:qcom,dsi-display/cabc 2>/dev/null || echo 0)"
     }
   }
 }
