@@ -107,6 +107,13 @@ fi
     "display": {
       "hbm": "$(cat /sys/devices/platform/soc/soc:qcom,dsi-display/hbm 2>/dev/null || echo 0)",
       "cabc": "$(cat /sys/devices/platform/soc/soc:qcom,dsi-display/cabc 2>/dev/null || echo 0)"
+    },
+    "adreno": {
+      "adrenoboost": "$(cat /sys/devices/platform/soc/5900000.qcom,kgsl-3d0/devfreq/5900000.qcom,kgsl-3d0/adrenoboost 2>/dev/null || echo 0)",
+      "idler_active": "$(cat /sys/module/adreno_idler/parameters/adreno_idler_active 2>/dev/null || echo N)",
+      "idler_downdifferential": "$(cat /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 2>/dev/null || echo 20)",
+      "idler_idlewait": "$(cat /sys/module/adreno_idler/parameters/adreno_idler_idlewait 2>/dev/null || echo 15)",
+      "idler_idleworkload": "$(cat /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 2>/dev/null || echo 5000)"
     }
   }
 }

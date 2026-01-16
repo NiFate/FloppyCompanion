@@ -148,6 +148,22 @@
             "cabcMedium": "Medium (Videos)",
             "cabcHigh": "High (Images)"
         },
+        "adreno": {
+            "title": "Adreno Tweaks",
+            "adrenoboost": "Adrenoboost",
+            "adrenoboostOff": "Off",
+            "adrenoboostLow": "Low",
+            "adrenoboostMedium": "Medium",
+            "adrenoboostHigh": "High",
+            "currentAdrenoboost": "Active Adrenoboost",
+            "adrenoidler": "Adrenoidler",
+            "idlerActive": "Active",
+            "idlerDowndifferential": "Down Differential",
+            "idlerIdlewait": "Idle Wait",
+            "idlerIdleworkload": "Idle Workload",
+            "enabled": "Enabled",
+            "disabled": "Disabled"
+        },
         "platformTweaks": "Platform Tweaks",
         "dismiss": "Dismiss",
         "tooltip": {
@@ -164,7 +180,10 @@
             "soundcontrol": "Adjust headphone and microphone gain in decibels. Higher values increase volume. Use Split L/R to control left and right channels independently.",
             "charging": "Configure advanced charging behavior.",
             "chargingBypass": "Stops battery charging while allowing device to run from USB power. Useful for gaming to reduce heat.",
-            "chargingFast": "Forces up to 900mA charging current over standard USB connections (e.g. PC ports)."
+            "chargingFast": "Forces up to 900mA charging current over standard USB connections (e.g. PC ports).",
+            "adreno": "Tweaks specific to Adreno GPUs.",
+            "adrenoboost": "A replacement boosting algorithm for Adreno GPUs that replaces the default one.",
+            "adrenoidler": "An algorithm that makes the boosting of the GPU less aggressive, making it tend to go idle more."
         }
     },
     "about": {

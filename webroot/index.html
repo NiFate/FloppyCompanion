@@ -722,6 +722,106 @@
                         </div>
                     </template>
 
+                    <template id="tpl-adreno">
+                        <div class="card-content">
+                            <!-- Adrenoboost -->
+                            <div class="tweak-section">
+                                <h3 class="tweak-section-title" style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <span data-i18n="tweaks.adreno.adrenoboost">Adrenoboost</span>
+                                    <div class="status-icon-wrapper">
+                                        <svg class="status-icon info small"
+                                            onclick="toggleBubble('bubble-adreno-adrenoboost', event)"
+                                            data-icon="info_outline"></svg>
+                                        <div id="bubble-adreno-adrenoboost" class="status-bubble center hidden"
+                                            data-i18n="tweaks.tooltip.adrenoboost"></div>
+                                    </div>
+                                </h3>
+                                <div class="option-grid" id="adreno-adrenoboost-options">
+                                    <button class="option-btn" data-value="0"
+                                        data-i18n="tweaks.adreno.adrenoboostOff">Off</button>
+                                    <button class="option-btn" data-value="1"
+                                        data-i18n="tweaks.adreno.adrenoboostLow">Low</button>
+                                    <button class="option-btn" data-value="2"
+                                        data-i18n="tweaks.adreno.adrenoboostMedium">Medium</button>
+                                    <button class="option-btn" data-value="3"
+                                        data-i18n="tweaks.adreno.adrenoboostHigh">High</button>
+                                </div>
+                                <div class="current-values" style="margin-top: 8px;">
+                                    <div class="value-row">
+                                        <span class="value-label" data-i18n="tweaks.adreno.currentAdrenoboost">Active Adrenoboost</span>
+                                        <span class="value-data" id="adreno-current-adrenoboost">--</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Adrenoidler -->
+                            <div class="tweak-section" style="margin-top: 12px;">
+                                <h3 class="tweak-section-title" style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <span data-i18n="tweaks.adreno.adrenoidler">Adrenoidler</span>
+                                    <div class="status-icon-wrapper">
+                                        <svg class="status-icon info small"
+                                            onclick="toggleBubble('bubble-adreno-adrenoidler', event)"
+                                            data-icon="info_outline"></svg>
+                                        <div id="bubble-adreno-adrenoidler" class="status-bubble center hidden"
+                                            data-i18n="tweaks.tooltip.adrenoidler"></div>
+                                    </div>
+                                </h3>
+                                
+                                <!-- Active Toggle -->
+                                <div class="tweak-row" style="border-bottom: none;">
+                                    <div class="tweak-info-col">
+                                        <span class="tweak-label" data-i18n="tweaks.adreno.idlerActive">Active</span>
+                                        <span class="tweak-val" id="adreno-val-active">--</span>
+                                    </div>
+                                    <div class="tweak-switch-container">
+                                        <label class="m3-switch" style="display:inline-block; margin:0;">
+                                            <input type="checkbox" id="adreno-active-switch">
+                                            <span class="m3-switch-track"><span class="m3-switch-thumb"></span></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Parameters -->
+                                <div class="tweak-row">
+                                    <div class="tweak-info-col">
+                                        <span class="tweak-label" data-i18n="tweaks.adreno.idlerDowndifferential">Down Differential</span>
+                                        <span class="tweak-val" id="adreno-val-downdifferential">--</span>
+                                    </div>
+                                    <div class="tweak-input-container">
+                                        <input type="number" id="adreno-downdifferential" class="styled-input" placeholder="20">
+                                    </div>
+                                </div>
+                                <div class="tweak-row">
+                                    <div class="tweak-info-col">
+                                        <span class="tweak-label" data-i18n="tweaks.adreno.idlerIdlewait">Idle Wait</span>
+                                        <span class="tweak-val" id="adreno-val-idlewait">--</span>
+                                    </div>
+                                    <div class="tweak-input-container">
+                                        <input type="number" id="adreno-idlewait" class="styled-input" placeholder="15">
+                                    </div>
+                                </div>
+                                <div class="tweak-row" style="border-bottom: none;">
+                                    <div class="tweak-info-col">
+                                        <span class="tweak-label" data-i18n="tweaks.adreno.idlerIdleworkload">Idle Workload</span>
+                                        <span class="tweak-val" id="adreno-val-idleworkload">--</span>
+                                    </div>
+                                    <div class="tweak-input-container">
+                                        <input type="number" id="adreno-idleworkload" class="styled-input" placeholder="5000">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tweak-actions">
+                                <button class="tweak-action-btn secondary" id="adreno-btn-save"
+                                    data-i18n="tweaks.save">Save</button>
+                                <button class="tweak-action-btn secondary" id="adreno-btn-apply"
+                                    data-i18n="tweaks.apply">Apply</button>
+                                <button class="tweak-action-btn primary" id="adreno-btn-save-apply"
+                                    data-i18n="tweaks.saveApply">Save & Apply</button>
+                            </div>
+                        </div>
+                    </template>
+
                     <template id="tpl-zram">
                         <div class="card-content">
                             <div class="tweak-toggle-row">
@@ -1105,6 +1205,7 @@
     <script src="js/tweaks/floppytrinketmi/soundcontrol.js"></script>
     <script src="js/tweaks/floppytrinketmi/charging.js"></script>
     <script src="js/tweaks/floppytrinketmi/display.js"></script>
+    <script src="js/tweaks/floppytrinketmi/adreno.js"></script>
     <script src="vendor/micromod/AudioPlayer.js"></script>
     <script src="vendor/micromod/Micromod.js"></script>
     <script src="js/egg.js"></script>

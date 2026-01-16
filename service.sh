@@ -69,6 +69,11 @@ if [ -f "$MODDIR/tweaks/display.sh" ]; then
     sh "$MODDIR/tweaks/display.sh" apply_saved
 fi
 
+# Adreno (FloppyTrinketMi only)
+if [ -f "$MODDIR/tweaks/adreno.sh" ]; then
+    sh "$MODDIR/tweaks/adreno.sh" apply_saved
+fi
+
 # --- Update Module Description ---
 KERN_VER=$(uname -r)
 DESCRIPTION="Companion module to tweak FloppyKernel."

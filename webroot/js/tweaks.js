@@ -368,6 +368,7 @@ function initPlatformTweaks() {
         if (typeof initChargingTweak === 'function') initChargingTweak();
         if (typeof initDisplayTweak === 'function') initDisplayTweak();
         if (typeof initSoundControlTweak === 'function') initSoundControlTweak();
+        if (typeof initAdrenoTweak === 'function') initAdrenoTweak();
     };
 
     // Ensure schema is loaded/rendered even if platform init runs before tweaks tab init.

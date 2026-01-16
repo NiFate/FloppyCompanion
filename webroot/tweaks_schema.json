@@ -107,6 +107,20 @@
             "var": "kernelName",
             "eq": "FloppyTrinketMi"
           }
+        },
+        {
+          "id": "adreno",
+          "cardId": "adreno-card",
+          "pendingId": "adreno-pending-indicator",
+          "type": "custom",
+          "templateId": "tpl-adreno",
+          "iconKey": "shadow",
+          "titleKey": "tweaks.adreno.title",
+          "tooltipKey": "tweaks.tooltip.adreno",
+          "requires": {
+            "var": "kernelName",
+            "eq": "FloppyTrinketMi"
+          }
         }
       ]
     },
