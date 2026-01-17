@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # Configuration
-# Run from current directory (repo)
 MODULE_DIR="$(dirname "$(readlink -f "$0")")"
-OUTPUT_DIR="$MODULE_DIR"
+OUTPUT_DIR="$MODULE_DIR/out"
+
+# Create output directory
+mkdir -p "$OUTPUT_DIR"
 
 # Get timestamp
 TIMESTAMP=$(date +%Y%m%d_%H%M)
@@ -26,19 +28,17 @@ VERSION_CODE=$(grep "^versionCode=" "$MODULE_DIR/module.prop" | cut -d= -f2)
 
 # Construct Filename
 ZIP_NAME="FloppyCompanion-${VERSION}-${HASH}-${TIMESTAMP}.zip"
+ZIP_PATH="$OUTPUT_DIR/$ZIP_NAME"
 
 # --- Magiskboot Handling ---
-# Always fetch latest Magisk
 echo "Resolving latest Magisk version..."
-# Get redirect URL from latest
 LATEST_URL=$(curl -sI https://github.com/topjohnwu/Magisk/releases/latest | grep -i "location:" | awk '{print $2}' | tr -d '\r')
-# Extract tag (e.g., v30.6)
 TAG=${LATEST_URL##*/}
 echo "Latest tag: $TAG"
 
 MAGISK_APK="Magisk-${TAG}.apk"
 MAGISK_URL="https://github.com/topjohnwu/Magisk/releases/download/${TAG}/${MAGISK_APK}"
-TOOLS_DIR="tools"
+TOOLS_DIR="$MODULE_DIR/tools"
 
 # Prepare tools directory
 mkdir -p "$TOOLS_DIR"
@@ -64,21 +64,35 @@ ORIGINAL_VERSION="$VERSION"
 NEW_VERSION="${VERSION}-${HASH}"
 sed -i "s/^version=.*/version=${NEW_VERSION}/" module.prop
 
-# Zip contents of current directory
-# Exclude:
-# - .git directory
-# - build.sh (the script itself)
-# - any existing .zip files
-# - backend script placeholders if any (we will add real ones later)
-zip -r "$ZIP_NAME" . -x "*.git*" "build.sh" "*.zip"
+# Create temporary directory for module files
+TEMP_DIR=$(mktemp -d)
+trap "rm -rf $TEMP_DIR" EXIT
 
-# Restore original module.prop version
-sed -i "s/^version=.*/version=${ORIGINAL_VERSION}/" module.prop
-
-# Cleanup tools binary (leave directory if it exists in repo)
-rm -f "$TOOLS_DIR/magiskboot"
-if [ -z "$(ls -A $TOOLS_DIR)" ]; then
-   rmdir "$TOOLS_DIR"
+# Copy module files
+cp module.prop "$TEMP_DIR/"
+cp LICENSE "$TEMP_DIR/"
+cp service.sh "$TEMP_DIR/"
+cp persistence.sh "$TEMP_DIR/"
+cp customize.sh "$TEMP_DIR/"
+cp features_backend.sh "$TEMP_DIR/"
+cp -r tweaks "$TEMP_DIR/"
+cp -r webroot "$TEMP_DIR/"
+if [ -d tools ] && [ -n "$(ls -A tools 2>/dev/null)" ]; then
+    cp -r tools "$TEMP_DIR/"
 fi
 
-echo "Done! Output: $MODULE_DIR/$ZIP_NAME"
+# Create zip from temporary directory
+cd "$TEMP_DIR" || exit 1
+zip -r "$ZIP_PATH" . > /dev/null
+
+# Restore original module.prop version
+cd "$MODULE_DIR" || exit 1
+sed -i "s/^version=.*/version=${ORIGINAL_VERSION}/" module.prop
+
+# Cleanup tools binary
+rm -f "$TOOLS_DIR/magiskboot"
+if [ -z "$(ls -A $TOOLS_DIR 2>/dev/null)" ]; then
+    rmdir "$TOOLS_DIR" 2>/dev/null || true
+fi
+
+echo "Done! Output: $ZIP_PATH"
