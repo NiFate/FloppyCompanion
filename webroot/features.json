@@ -100,10 +100,22 @@
                 {
                     "key": "uname_bpf_spoof",
                     "title": "BPF Spoofing",
-                    "type": "info",
+                    "type": "select",
                     "desc": "Spoof Linux version for BPF support. Managed externally; changing this manually may cause bootloops.",
                     "experimental": true,
-                    "save": true
+                    "save": true,
+                    "options": [
+                        {
+                            "val": "1",
+                            "label": "Partial spoofing",
+                            "desc": "Spoofs the uname only for netbpfload."
+                        },
+                        {
+                            "val": "5",
+                            "label": "Full spoofing",
+                            "desc": "Spoofs the uname for several bpf-related services."
+                        }
+                    ]
                 }
             ]
         }

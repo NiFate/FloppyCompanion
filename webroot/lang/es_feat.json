@@ -57,6 +57,16 @@
     },
     "uname_bpf_spoof": {
         "title": "Spoofing BPF",
-        "desc": "Falsifica la versión de Linux para soporte BPF. Gestionado externamente; cambiar esto manualmente puede causar bootloops."
+        "desc": "Falsifica la versión de Linux para soporte BPF. Gestionado externamente; cambiar esto manualmente puede causar bootloops.",
+        "options": {
+            "1": {
+                "label": "Falsificación parcial",
+                "desc": "Falsifica el uname solo para netbpfload."
+            },
+            "5": {
+                "label": "Falsificación completa",
+                "desc": "Falsifica el uname para varios servicios relacionados con BPF."
+            }
+        }
     }
 }
