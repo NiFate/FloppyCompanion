@@ -1,5 +1,7 @@
 # FloppyCompanion
 
+<p align="center"><img src="docs/images/floppycompanion.png" alt="FloppyCompanion" width="720" /></p>
+
 A WebUI module companion for configuring FloppyKernel. Provides a web-based UI to toggle kernel features and tweak kernel parameters.
 
 ## Feature overview
