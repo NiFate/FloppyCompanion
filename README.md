@@ -132,6 +132,10 @@ For FloppyCompanion **v1.0**:
 >[!NOTE]
 >Apatch should in theory be supported, however it has been untested, and Apatch doesn't currently work on Floppy1280 anyway.
 
+>[!CAUTION]
+>If you spoof the kernel version (such as with SusFS or BRENE), this module WILL NOT WORK properly!
+>Avoid doing that for now, I will fix it when possible!
+
 ## Kernel repositories
 
 - [Floppy1280 Kernel](https://github.com/FlopKernel-Series/flop_s5e8825_kernel)
