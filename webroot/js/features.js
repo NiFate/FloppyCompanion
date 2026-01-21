@@ -150,8 +150,10 @@ async function loadFeatures() {
         // Visibility check for Read-Only Patch Toggle
         const readonlyContainer = document.getElementById('readonly-patch-container');
         if (readonlyContainer) {
-            const hasInfoFeatures = schema.some(f => f.type === 'info');
+            const hasInfoFeatures = schema.some(f => f.type === 'info' || f.readOnly);
             readonlyContainer.style.display = hasInfoFeatures ? 'block' : 'none';
+            const roToggle = document.getElementById('readonly-patch-toggle');
+            if (roToggle) roToggle.disabled = !hasInfoFeatures;
         }
 
     } catch (e) {
@@ -243,7 +245,7 @@ function renderFeatures(schema, procCmdline) {
         }
 
         // 2. Read-Only Warning
-        if (item.type === 'info') {
+        if (item.type === 'info' || item.readOnly) {
             const bubbleId = `bubble-readonly-${item.key}`;
             const bubbleText = allowReadonlyPatch
                 ? t('features.tooltipReadOnlyAllowed') || "Changing this feature's state is temporarily allowed, but will not be saved."
@@ -262,8 +264,8 @@ function renderFeatures(schema, procCmdline) {
 
         // --- Switch Construction ---
         let headerControl = '';
-        // Allow switch for all types, but disable strictly for info if not allowed
-        const isInfo = item.type === 'info';
+        // Allow switch for all types, but treat explicit readOnly flag same as type 'info'
+        const isInfo = item.type === 'info' || item.readOnly;
         const isReadOnly = isInfo && !allowReadonlyPatch;
 
         headerControl = `
@@ -298,9 +300,9 @@ function renderFeatures(schema, procCmdline) {
                 const expBadge = opt.experimental ? `<span class="experimental-badge" title="${t('features.tooltipExperimental') || 'Experimental'}"><svg viewBox="${warningIcon.viewBox}" width="16" height="16"><path fill="#F44336" d="${warningIcon.d}"/></svg></span>` : '';
 
                 return `
-                <div class="option-item ${selectedClass}" 
+                <div class="option-item ${selectedClass} ${isReadOnly ? 'readonly' : ''}"
                      data-val="${opt.val}"
-                     onclick="updateFeature('${item.key}', '${opt.val}', this)">
+                     ${isReadOnly ? 'aria-disabled="true"' : `onclick="updateFeature('${item.key}', '${opt.val}', this)"`}>
                     ${expBadge}
                     <div class="option-header">
                         <span class="option-title">${tf(item.key, 'label', opt.val, currentFamily) || opt.label}</span>
