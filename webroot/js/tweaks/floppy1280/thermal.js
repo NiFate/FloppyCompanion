@@ -76,8 +76,9 @@ function renderThermalCard() {
 
     // Update current value display
     if (modeVal) {
-        const modeName = THERMAL_MODE_NAMES[thermalCurrentState.mode] || thermalCurrentState.mode || '--';
         const modeNum = thermalCurrentState.mode;
+        const modeKey = `tweaks.thermal.mode${modeNum}`;
+        const modeName = (window.t ? window.t(modeKey) : null) || THERMAL_MODE_NAMES[modeNum] || thermalCurrentState.mode || '--';
         modeVal.textContent = modeNum !== undefined && modeNum !== '' ? `${modeName} - ${modeNum}` : modeName;
     }
 

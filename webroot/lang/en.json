@@ -67,6 +67,8 @@
             "enable": "Enable ZRAM",
             "diskSize": "Disk Size",
             "algorithm": "Algorithm",
+            "activeDisksize": "Active disksize",
+            "activeAlgorithm": "Active algorithm",
             "custom": "Custom",
             "customSize": "Custom Size (MiB)",
             "enterSize": "Enter size",

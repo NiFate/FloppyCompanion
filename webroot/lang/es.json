@@ -67,6 +67,8 @@
             "enable": "Activar ZRAM",
             "diskSize": "Tamaño de disco",
             "algorithm": "Algoritmo",
+            "activeDisksize": "Tamaño activo",
+            "activeAlgorithm": "Algoritmo activo",
             "custom": "Personalizado",
             "customSize": "Tamaño Personalizado (MiB)",
             "enterSize": "Ingrese tamaño",
