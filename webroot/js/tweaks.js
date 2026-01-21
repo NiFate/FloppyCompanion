@@ -107,10 +107,36 @@ function buildTweakCardShell(card) {
     header.appendChild(titleWrap);
 
     if (card.pendingId) {
-        const pending = document.createElement('span');
+        const pending = document.createElement('div');
         pending.id = card.pendingId;
         pending.className = 'pending-indicator hidden';
-        pending.setAttribute('data-i18n', 'tweaks.unsaved');
+
+        // Create the icon SVG
+        const svg = window.FC && window.FC.icons && window.FC.icons.createSvg
+            ? window.FC.icons.createSvg('save_as', { className: 'pending-icon' })
+            : null;
+        if (svg) {
+            pending.appendChild(svg);
+        }
+
+        // Create tooltip bubble
+        const tooltip = document.createElement('span');
+        tooltip.className = 'pending-tooltip';
+        tooltip.setAttribute('data-i18n', 'tweaks.unsaved');
+        tooltip.textContent = window.t ? window.t('tweaks.unsaved') : 'Unsaved';
+        pending.appendChild(tooltip);
+
+        // Toggle tooltip on click
+        pending.addEventListener('click', (e) => {
+            e.stopPropagation();
+            pending.classList.toggle('show-tooltip');
+        });
+
+        // Hide tooltip when clicking elsewhere
+        document.addEventListener('click', () => {
+            pending.classList.remove('show-tooltip');
+        });
+
         header.appendChild(pending);
     }
 
