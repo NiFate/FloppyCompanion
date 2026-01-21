@@ -202,6 +202,13 @@
         "translationCredits": "Translation credits",
         "repository": "repository",
         "telegram": "Telegram channel",
+        "variantStandard": "Standard",
+        "build": {
+            "release": "Release Build",
+            "testing": "Testing",
+            "git": "Git",
+            "dirty": "Dirty"
+        },
         "easterEgg": {
             "title": "Thank you for using FloppyKernel!",
             "signature": "- Flopster101",
