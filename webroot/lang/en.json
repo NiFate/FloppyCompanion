@@ -15,6 +15,7 @@
         "variant": "Variant",
         "version": "Version",
         "buildType": "Build Type",
+        "linux": "Linux version",
         "tools": "Tools",
         "saveLastKmsg": "Save last_kmsg",
         "saveDmesg": "Save dmesg",
