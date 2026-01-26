@@ -372,13 +372,18 @@ async function handleDeletePreset() {
 
 // Prompt for preset name
 async function promptPresetName() {
+    const title = t('tweaks.savePresetTitle');
+    const bodyText = t('tweaks.presetNamePrompt');
+    const confirmText = t('tweaks.save');
+    const cancelText = t('modal.cancel');
+
     const result = await showConfirmModal({
-        title: 'Save Preset',
-        body: `<p>Enter a name for the preset:</p>
+        title: title,
+        body: `<p>${bodyText}</p>
                <input type="text" id="save-preset-name-input" class="preset-name-input" placeholder="My Preset" maxlength="32" style="margin-top: 8px;">`,
         iconName: 'save',
-        confirmText: 'Save',
-        cancelText: 'Cancel'
+        confirmText: confirmText,
+        cancelText: cancelText
     });
 
     if (result === true) {
@@ -392,13 +397,19 @@ async function promptPresetName() {
 
 // Show overwrite prompt
 async function showOverwritePrompt() {
+    const title = t('tweaks.overwriteTitle');
+    const bodyText = t('tweaks.overwriteConfirm').replace('{name}', currentPresetName);
+    const confirmText = t('modal.overwrite') || 'Overwrite'; // Fallback if missing
+    const cancelText = t('modal.cancel');
+    const extraText = t('tweaks.saveAsNew');
+
     const result = await showConfirmModal({
-        title: 'Save Preset',
-        body: `<p>Do you want to overwrite "${currentPresetName}" or save as a new preset?</p>`,
+        title: title,
+        body: `<p>${bodyText}</p>`,
         iconClass: 'info',
-        confirmText: 'Overwrite',
-        cancelText: t('modal.cancel'),
-        extraButton: { text: 'Save as New', value: 'new' }
+        confirmText: confirmText,
+        cancelText: cancelText,
+        extraButton: { text: extraText, value: 'new' }
     });
 
     if (result === true) return 'overwrite';
