@@ -789,8 +789,8 @@ function renderProjectCredits(container, data) {
         }
 
         if (person.role) {
-            const roleTranslated = t(person.role);
-            content += ` <span class="credits-role">(${roleTranslated})</span>`;
+            // Use data-i18n for automatic updates
+            content += ` <span class="credits-role">(<span data-i18n="${person.role}">${person.role}</span>)</span>`;
         }
 
         html += `<li>${content}</li>`;
