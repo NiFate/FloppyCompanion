@@ -335,6 +335,50 @@ function parseKeyValue(output) {
     return result;
 }
 
+function sanitizeSavedState(state) {
+    const sanitized = { ...state };
+    Object.keys(sanitized).forEach(key => {
+        if (sanitized[key] === '') delete sanitized[key];
+    });
+    return sanitized;
+}
+
+function buildTweakCommand(scriptName, action, args = []) {
+    const scriptPath = `/data/adb/modules/floppy_companion/tweaks/${scriptName}.sh`;
+    let cmd = `sh "${scriptPath}" ${action}`;
+    if (args.length > 0) {
+        cmd += ' "' + args.join('" "') + '"';
+    }
+    return cmd;
+}
+
+window.runTweakBackend = async function (scriptName, action, ...args) {
+    try {
+        const cmd = buildTweakCommand(scriptName, action, args);
+        return await exec(cmd);
+    } catch (error) {
+        console.error(`Tweak backend error (${scriptName}:${action})`, error);
+        return '';
+    }
+};
+
+window.loadTweakState = async function (scriptName) {
+    const [currentOutput, savedOutput] = await Promise.all([
+        window.runTweakBackend(scriptName, 'get_current'),
+        window.runTweakBackend(scriptName, 'get_saved')
+    ]);
+
+    const current = parseKeyValue(currentOutput);
+    const saved = sanitizeSavedState(parseKeyValue(savedOutput));
+
+    return { current, saved, currentOutput, savedOutput };
+};
+
+window.getDefaultTweakPreset = function (tweakId) {
+    const defaults = window.getDefaultPreset ? window.getDefaultPreset() : null;
+    return defaults?.tweaks?.[tweakId] || {};
+};
+
 // Expose toast function if not already available
 if (typeof showToast === 'undefined') {
     window.showToast = function (message, isError = false) {

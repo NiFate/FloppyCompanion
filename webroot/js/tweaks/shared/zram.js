@@ -14,33 +14,18 @@ function mibToBytes(mib) {
     return mib * 1048576;
 }
 
-// Run ZRAM backend command
-async function runZramBackend(action, ...args) {
-    const scriptPath = '/data/adb/modules/floppy_companion/tweaks/zram.sh';
-    let cmd = `sh "${scriptPath}" ${action}`;
-    if (args.length > 0) {
-        cmd += ' "' + args.join('" "') + '"';
-    }
-    return await exec(cmd);
-}
+const runZramBackend = (...args) => window.runTweakBackend('zram', ...args);
 
 // Load ZRAM state
 async function loadZramState() {
     try {
-        const currentOutput = await runZramBackend('get_current');
-        const savedOutput = await runZramBackend('get_saved');
+        const { current, saved } = await window.loadTweakState('zram');
 
-        zramCurrentState = parseKeyValue(currentOutput);
-        zramSavedState = parseKeyValue(savedOutput);
-
-        // Sanitize saved state: treat empty values as undefined
-        Object.keys(zramSavedState).forEach(key => {
-            if (zramSavedState[key] === '') delete zramSavedState[key];
-        });
+        zramCurrentState = current;
+        zramSavedState = saved;
 
         // Initialize pending state from saved if available, else from current, else from defaults
-        const defaults = window.getDefaultPreset ? window.getDefaultPreset() : null;
-        const defZram = defaults?.tweaks?.zram || {};
+        const defZram = window.getDefaultTweakPreset('zram');
 
         zramPendingState = {
             disksize: zramSavedState.disksize || zramCurrentState.disksize || defZram.disksize || '0',

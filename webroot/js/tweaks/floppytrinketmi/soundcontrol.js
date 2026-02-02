@@ -5,16 +5,7 @@ let scSavedState = { hp_l: '0', hp_r: '0', mic: '0' };
 let scPendingState = { hp_l: '0', hp_r: '0', mic: '0' };
 let scSplitMode = false;
 
-async function runSoundControlBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/soundcontrol.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`SoundControl backend error (${action}):`, error);
-        return '';
-    }
-}
+const runSoundControlBackend = (...args) => window.runTweakBackend('soundcontrol', ...args);
 
 function renderSoundControlCard() {
     // Update value labels from current state
@@ -88,16 +79,13 @@ function toggleSoundControlSplitMode(split) {
 }
 
 async function loadSoundControlState() {
-    const currentOutput = await runSoundControlBackend('get_current');
-    const current = parseKeyValue(currentOutput);
+    const { current, saved } = await window.loadTweakState('soundcontrol');
     scCurrentState = {
         hp_l: current.hp_l || '0',
         hp_r: current.hp_r || '0',
         mic: current.mic || '0'
     };
 
-    const savedOutput = await runSoundControlBackend('get_saved');
-    const saved = parseKeyValue(savedOutput);
     scSavedState = {
         hp_l: saved.hp_l || '0',
         hp_r: saved.hp_r || '0',

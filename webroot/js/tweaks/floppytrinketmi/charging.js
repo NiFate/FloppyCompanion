@@ -4,16 +4,7 @@ let chargingCurrentState = { bypass: '0', fast: '0' };
 let chargingSavedState = { bypass: '0', fast: '0' };
 let chargingPendingState = { bypass: '0', fast: '0' };
 
-async function runChargingBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/charging.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`Charging backend error (${action}):`, error);
-        return '';
-    }
-}
+const runChargingBackend = (...args) => window.runTweakBackend('charging', ...args);
 
 function renderChargingCard() {
     const valBypass = document.getElementById('charging-val-bypass');
@@ -47,15 +38,12 @@ function updateChargingPendingIndicator() {
 }
 
 async function loadChargingState() {
-    const currentOutput = await runChargingBackend('get_current');
-    const current = parseKeyValue(currentOutput);
+    const { current, saved } = await window.loadTweakState('charging');
     chargingCurrentState = {
         bypass: current.bypass || '0',
         fast: current.fast || '0'
     };
 
-    const savedOutput = await runChargingBackend('get_saved');
-    const saved = parseKeyValue(savedOutput);
     chargingSavedState = {
         bypass: saved.bypass || chargingCurrentState.bypass || '0',
         fast: saved.fast || chargingCurrentState.fast || '0'

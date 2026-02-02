@@ -4,16 +4,7 @@ let miscTrinketCurrentState = { touchboost: '0' };
 let miscTrinketSavedState = { touchboost: '0' };
 let miscTrinketPendingState = { touchboost: '0' };
 
-async function runMiscTrinketBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/misc_trinket.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`Misc Trinket backend error (${action}):`, error);
-        return '';
-    }
-}
+const runMiscTrinketBackend = (...args) => window.runTweakBackend('misc_trinket', ...args);
 
 function getEnabledDisabledText(val) {
     if (val === '1') {
@@ -46,14 +37,10 @@ function updateMiscTrinketPendingIndicator() {
 }
 
 async function loadMiscTrinketState() {
-    const currentOutput = await runMiscTrinketBackend('get_current');
-    const current = parseKeyValue(currentOutput);
+    const { current, saved } = await window.loadTweakState('misc_trinket');
     miscTrinketCurrentState = {
         touchboost: current.touchboost || '0'
     };
-
-    const savedOutput = await runMiscTrinketBackend('get_saved');
-    const saved = parseKeyValue(savedOutput);
 
     // Normalize saved values (use defaults if empty)
     const savedNormalized = {

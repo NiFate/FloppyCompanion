@@ -7,16 +7,7 @@ let displayCurrentState = { hbm: '0', cabc: '0' };
 let displaySavedState = { hbm: '0', cabc: '0' };
 let displayPendingState = { hbm: '0', cabc: '0' };
 
-async function runDisplayBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/display.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`Display backend error (${action}):`, error);
-        return '';
-    }
-}
+const runDisplayBackend = (...args) => window.runTweakBackend('display', ...args);
 
 function getDisplayHbmText(val) {
     switch (String(val)) {
@@ -68,15 +59,12 @@ function renderDisplayCard() {
 }
 
 async function loadDisplayState() {
-    const currentOutput = await runDisplayBackend('get_current');
-    const current = parseKeyValue(currentOutput);
+    const { current, saved } = await window.loadTweakState('display');
     displayCurrentState = {
         hbm: current.hbm || '0',
         cabc: current.cabc || '0'
     };
 
-    const savedOutput = await runDisplayBackend('get_saved');
-    const saved = parseKeyValue(savedOutput);
     displaySavedState = {
         hbm: saved.hbm || displayCurrentState.hbm || '0',
         cabc: saved.cabc || displayCurrentState.cabc || '0'

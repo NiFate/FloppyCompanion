@@ -5,16 +5,7 @@ let undervoltCurrentState = { little: '0', big: '0', gpu: '0' };
 let undervoltSavedState = { little: '0', big: '0', gpu: '0' }; // From config file
 let undervoltPendingState = { little: '0', big: '0', gpu: '0' };
 
-async function runUndervoltBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/undervolt.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`Undervolt backend error (${action}):`, error);
-        return '';
-    }
-}
+const runUndervoltBackend = (...args) => window.runTweakBackend('undervolt', ...args);
 
 async function checkUndervoltAvailable() {
     // Only available on Floppy1280
@@ -37,12 +28,9 @@ function loadUndervoltState() {
         document.getElementById('undervolt-card').classList.remove('hidden');
 
         // Load current and saved states in parallel
-        Promise.all([
-            runUndervoltBackend('get_current'),
-            runUndervoltBackend('get_saved')
-        ]).then(([currentOutput, savedOutput]) => {
-            undervoltCurrentState = parseKeyValue(currentOutput);
-            undervoltSavedState = parseKeyValue(savedOutput);
+        window.loadTweakState('undervolt').then(({ current, saved, savedOutput }) => {
+            undervoltCurrentState = current;
+            undervoltSavedState = saved;
 
             // Set pending to saved if available, else current (0)
             if (savedOutput.trim() && undervoltSavedState.little !== undefined) {

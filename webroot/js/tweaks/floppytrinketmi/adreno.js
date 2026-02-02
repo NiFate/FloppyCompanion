@@ -28,16 +28,7 @@ let adrenoPendingState = {
     idler_idleworkload: '5000'
 };
 
-async function runAdrenoBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/adreno.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`Adreno backend error (${action}):`, error);
-        return '';
-    }
-}
+const runAdrenoBackend = (...args) => window.runTweakBackend('adreno', ...args);
 
 function getAdrenoboostText(val) {
     switch (String(val)) {
@@ -130,8 +121,7 @@ function renderAdrenoCard() {
 }
 
 async function loadAdrenoState() {
-    const currentOutput = await runAdrenoBackend('get_current');
-    const current = parseKeyValue(currentOutput);
+    const { current, saved } = await window.loadTweakState('adreno');
     adrenoCurrentState = {
         adrenoboost: current.adrenoboost || '0',
         idler_active: current.idler_active || 'N',
@@ -139,9 +129,6 @@ async function loadAdrenoState() {
         idler_idlewait: current.idler_idlewait || '15',
         idler_idleworkload: current.idler_idleworkload || '5000'
     };
-
-    const savedOutput = await runAdrenoBackend('get_saved');
-    const saved = parseKeyValue(savedOutput);
 
     // Normalize saved values (use defaults if empty)
     const savedNormalized = {

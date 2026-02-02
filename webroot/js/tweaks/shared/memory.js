@@ -5,33 +5,18 @@ let memorySavedState = {};
 let memoryPendingState = {};
 let memoryDirtyMode = 'ratio'; // 'ratio' or 'bytes'
 
-// Run Memory backend command
-async function runMemoryBackend(action, ...args) {
-    const scriptPath = '/data/adb/modules/floppy_companion/tweaks/memory.sh';
-    let cmd = `sh "${scriptPath}" ${action}`;
-    if (args.length > 0) {
-        cmd += ' "' + args.join('" "') + '"';
-    }
-    return await exec(cmd);
-}
+const runMemoryBackend = (...args) => window.runTweakBackend('memory', ...args);
 
 // Load Memory state
 async function loadMemoryState() {
     try {
-        const currentOutput = await runMemoryBackend('get_current');
-        const savedOutput = await runMemoryBackend('get_saved');
+        const { current, saved } = await window.loadTweakState('memory');
 
-        memoryCurrentState = parseKeyValue(currentOutput);
-        memorySavedState = parseKeyValue(savedOutput);
-
-        // Sanitize
-        Object.keys(memorySavedState).forEach(key => {
-            if (memorySavedState[key] === '') delete memorySavedState[key];
-        });
+        memoryCurrentState = current;
+        memorySavedState = saved;
 
         // Initialize pending
-        const defaults = window.getDefaultPreset ? window.getDefaultPreset() : null;
-        const defMem = defaults?.tweaks?.memory || {};
+        const defMem = window.getDefaultTweakPreset('memory');
         memoryPendingState = { ...defMem, ...memoryCurrentState, ...memorySavedState };
 
         // Determine initial Dirty Mode

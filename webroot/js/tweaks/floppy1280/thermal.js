@@ -13,15 +13,7 @@ const THERMAL_MODE_NAMES = {
     '3': 'Performance'
 };
 
-// Run Thermal backend
-async function runThermalBackend(action, ...args) {
-    const scriptPath = '/data/adb/modules/floppy_companion/tweaks/thermal.sh';
-    let cmd = `sh "${scriptPath}" ${action}`;
-    if (args.length > 0) {
-        cmd += ' "' + args.join('" "') + '"';
-    }
-    return await exec(cmd);
-}
+const runThermalBackend = (...args) => window.runTweakBackend('thermal', ...args);
 
 // Check if thermal control is available (Floppy1280)
 async function checkThermalAvailable() {
@@ -39,16 +31,10 @@ async function loadThermalState() {
             return;
         }
 
-        const currentOutput = await runThermalBackend('get_current');
-        const savedOutput = await runThermalBackend('get_saved');
+        const { current, saved } = await window.loadTweakState('thermal');
 
-        thermalCurrentState = parseKeyValue(currentOutput);
-        thermalSavedState = parseKeyValue(savedOutput);
-
-        // Sanitize saved state
-        Object.keys(thermalSavedState).forEach(key => {
-            if (thermalSavedState[key] === '') delete thermalSavedState[key];
-        });
+        thermalCurrentState = current;
+        thermalSavedState = saved;
 
         // Initialize pending state
         thermalPendingState = {

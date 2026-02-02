@@ -4,16 +4,7 @@ let miscCurrentState = { block_ed3: '0', gpu_clklck: '0', gpu_unlock: '0' };
 let miscSavedState = { block_ed3: '0', gpu_clklck: '0', gpu_unlock: '0' };
 let miscPendingState = { block_ed3: '0', gpu_clklck: '0', gpu_unlock: '0' };
 
-async function runMiscBackend(action, ...args) {
-    const cmd = `sh ${DATA_DIR}/tweaks/misc.sh ${action} ${args.join(' ')}`;
-    try {
-        const result = await exec(cmd);
-        return result.trim();
-    } catch (error) {
-        console.error(`Misc backend error (${action}):`, error);
-        return '';
-    }
-}
+const runMiscBackend = (...args) => window.runTweakBackend('misc', ...args);
 
 function getEnabledDisabledText(val) {
     if (val === '1') {
@@ -91,17 +82,13 @@ function updateGpuUnlockAvailability() {
 
 async function loadMiscState() {
     // Get current kernel state
-    const currentOutput = await runMiscBackend('get_current');
-    const current = parseKeyValue(currentOutput);
+    const { current, saved } = await window.loadTweakState('misc');
     miscCurrentState = {
         block_ed3: current.block_ed3 || '0',
         gpu_clklck: current.gpu_clklck || '0',
         gpu_unlock: current.gpu_unlock || '0'
     };
 
-    // Get saved config
-    const savedOutput = await runMiscBackend('get_saved');
-    const saved = parseKeyValue(savedOutput);
     miscSavedState = {
         block_ed3: saved.block_ed3 || '0',
         gpu_clklck: saved.gpu_clklck || '0',

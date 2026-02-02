@@ -4,15 +4,7 @@ let ioschedDevices = []; // Array of {name, active, available}
 let ioschedSavedState = {};
 let ioschedPendingState = {};
 
-// Run I/O Backend
-async function runIoBackend(action, ...args) {
-    const scriptPath = '/data/adb/modules/floppy_companion/tweaks/iosched.sh';
-    let cmd = `sh "${scriptPath}" ${action}`;
-    if (args.length > 0) {
-        cmd += ' "' + args.join('" "') + '"';
-    }
-    return await exec(cmd);
-}
+const runIoBackend = (...args) => window.runTweakBackend('iosched', ...args);
 
 // Parse I/O Scheduler Output
 function parseIoSchedulerOutput(output) {
@@ -48,8 +40,7 @@ async function loadIoSchedulerState() {
         ioschedPendingState = {};
         ioschedDevices.forEach(d => {
             // Priority: Saved > Active in system > Default
-            const defaults = window.getDefaultPreset ? window.getDefaultPreset() : null;
-            const defIo = defaults?.tweaks?.iosched || {};
+            const defIo = window.getDefaultTweakPreset('iosched');
             ioschedPendingState[d.device] = ioschedSavedState[d.device] || d.active || defIo[d.device];
         });
 
