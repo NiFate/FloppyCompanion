@@ -123,9 +123,6 @@ function renderIoCard() {
 
 // Update Indicator
 function updateIoPendingIndicator() {
-    const indicator = document.getElementById('iosched-pending-indicator');
-    if (!indicator) return;
-
     let hasPending = false;
     for (const dev of ioschedDevices) {
         // Compare pending vs saved (or initial active)
@@ -136,8 +133,7 @@ function updateIoPendingIndicator() {
         }
     }
 
-    if (hasPending) indicator.classList.remove('hidden');
-    else indicator.classList.add('hidden');
+    window.setPendingIndicator('iosched-pending-indicator', hasPending);
 }
 
 // Save I/O
@@ -178,16 +174,7 @@ async function applyIoScheduler() {
 
 // Init I/O Tweak
 function initIoSchedulerTweak() {
-    const btnSave = document.getElementById('iosched-btn-save');
-    const btnApply = document.getElementById('iosched-btn-apply');
-    const btnSaveApply = document.getElementById('iosched-btn-save-apply');
-
-    if (btnSave) btnSave.addEventListener('click', saveIoScheduler);
-    if (btnApply) btnApply.addEventListener('click', applyIoScheduler);
-    if (btnSaveApply) btnSaveApply.addEventListener('click', async () => {
-        await saveIoScheduler();
-        await applyIoScheduler();
-    });
+    window.bindSaveApplyButtons('iosched', saveIoScheduler, applyIoScheduler);
 
     loadIoSchedulerState();
 

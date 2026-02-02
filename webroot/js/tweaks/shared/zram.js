@@ -134,9 +134,6 @@ function renderZramCard() {
 
 // Update pending indicator
 function updateZramPendingIndicator() {
-    const indicator = document.getElementById('zram-pending-indicator');
-    if (!indicator) return;
-
     // Check if pending differs from saved
     // If nothing is saved, compare pending to current (initial) values
     const savedDisksize = zramSavedState.disksize || zramCurrentState.disksize;
@@ -148,11 +145,7 @@ function updateZramPendingIndicator() {
         (zramPendingState.algorithm !== savedAlgorithm) ||
         (zramPendingState.enabled !== savedEnabled);
 
-    if (hasPending) {
-        indicator.classList.remove('hidden');
-    } else {
-        indicator.classList.add('hidden');
-    }
+    window.setPendingIndicator('zram-pending-indicator', hasPending);
 }
 
 // Select disk size
@@ -266,17 +259,7 @@ function initZramTweak() {
         });
     }
 
-    // Action buttons
-    const btnSave = document.getElementById('zram-btn-save');
-    const btnApply = document.getElementById('zram-btn-apply');
-    const btnSaveApply = document.getElementById('zram-btn-save-apply');
-
-    if (btnSave) btnSave.addEventListener('click', saveZram);
-    if (btnApply) btnApply.addEventListener('click', applyZram);
-    if (btnSaveApply) btnSaveApply.addEventListener('click', async () => {
-        await saveZram();
-        await applyZram();
-    });
+    window.bindSaveApplyButtons('zram', saveZram, applyZram);
 
     // Load initial state
     loadZramState();

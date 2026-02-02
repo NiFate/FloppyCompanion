@@ -37,19 +37,12 @@ function renderMiscCard() {
 }
 
 function updateMiscPendingIndicator() {
-    const indicator = document.getElementById('misc-pending-indicator');
-    if (!indicator) return;
-
     const hasChanges =
         miscPendingState.block_ed3 !== miscSavedState.block_ed3 ||
         miscPendingState.gpu_clklck !== miscSavedState.gpu_clklck ||
         miscPendingState.gpu_unlock !== miscSavedState.gpu_unlock;
 
-    if (hasChanges) {
-        indicator.classList.remove('hidden');
-    } else {
-        indicator.classList.add('hidden');
-    }
+    window.setPendingIndicator('misc-pending-indicator', hasChanges);
 }
 
 function updateGpuUnlockAvailability() {
@@ -187,13 +180,7 @@ function initMiscTweak() {
         });
     }
 
-    // Button handlers
-    document.getElementById('misc-btn-save')?.addEventListener('click', saveMisc);
-    document.getElementById('misc-btn-apply')?.addEventListener('click', applyMisc);
-    document.getElementById('misc-btn-save-apply')?.addEventListener('click', async () => {
-        await saveMisc();
-        await applyMisc();
-    });
+    window.bindSaveApplyButtons('misc', saveMisc, applyMisc);
 
     // Load initial state
     loadMiscState();

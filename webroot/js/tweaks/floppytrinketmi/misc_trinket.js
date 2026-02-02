@@ -24,16 +24,9 @@ function renderMiscTrinketCard() {
 }
 
 function updateMiscTrinketPendingIndicator() {
-    const indicator = document.getElementById('misc-trinket-pending-indicator');
-    if (!indicator) return;
-
     const hasChanges = miscTrinketPendingState.touchboost !== miscTrinketSavedState.touchboost;
 
-    if (hasChanges) {
-        indicator.classList.remove('hidden');
-    } else {
-        indicator.classList.add('hidden');
-    }
+    window.setPendingIndicator('misc-trinket-pending-indicator', hasChanges);
 }
 
 async function loadMiscTrinketState() {
@@ -134,12 +127,7 @@ function initMiscTrinketTweak() {
             });
         }
 
-        document.getElementById('misc-trinket-btn-save')?.addEventListener('click', saveMiscTrinket);
-        document.getElementById('misc-trinket-btn-apply')?.addEventListener('click', applyMiscTrinket);
-        document.getElementById('misc-trinket-btn-save-apply')?.addEventListener('click', async () => {
-            await saveMiscTrinket();
-            await applyMiscTrinket();
-        });
+        window.bindSaveApplyButtons('misc-trinket', saveMiscTrinket, applyMiscTrinket);
 
         document.addEventListener('languageChanged', () => {
             renderMiscTrinketCard();

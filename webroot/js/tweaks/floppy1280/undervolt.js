@@ -132,9 +132,6 @@ function updateSliderTicks(slider, isUnlocked) {
 }
 
 function updateUndervoltPendingIndicator() {
-    const indicator = document.getElementById('undervolt-pending-indicator');
-    if (!indicator) return;
-
     // Compare pending with saved (or current/default)
     const hasSaved = undervoltSavedState.little !== undefined;
     const reference = hasSaved ? undervoltSavedState : { little: '0', big: '0', gpu: '0' };
@@ -144,11 +141,7 @@ function updateUndervoltPendingIndicator() {
         undervoltPendingState.big !== reference.big ||
         undervoltPendingState.gpu !== reference.gpu;
 
-    if (isChanged) {
-        indicator.classList.remove('hidden');
-    } else {
-        indicator.classList.add('hidden');
-    }
+    window.setPendingIndicator('undervolt-pending-indicator', isChanged);
 }
 
 async function saveUndervolt() {
@@ -275,16 +268,7 @@ function initUndervoltTweak() {
     }
 
     // Action Buttons
-    const saveBtn = document.getElementById('undervolt-btn-save');
-    const applyBtn = document.getElementById('undervolt-btn-apply');
-    const saveApplyBtn = document.getElementById('undervolt-btn-save-apply');
-
-    if (saveBtn) saveBtn.addEventListener('click', saveUndervolt);
-    if (applyBtn) applyBtn.addEventListener('click', applyUndervolt);
-    if (saveApplyBtn) saveApplyBtn.addEventListener('click', async () => {
-        await saveUndervolt();
-        await applyUndervolt();
-    });
+    window.bindSaveApplyButtons('undervolt', saveUndervolt, applyUndervolt);
 
     // Language change listener
     document.addEventListener('languageChanged', () => {

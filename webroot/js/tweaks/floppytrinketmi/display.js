@@ -36,14 +36,11 @@ function updateDisplayOptions(containerId, selectedValue) {
 }
 
 function updateDisplayPendingIndicator() {
-    const indicator = document.getElementById('display-pending-indicator');
-    if (!indicator) return;
-
     const hasChanges =
         displayPendingState.hbm !== displaySavedState.hbm ||
         displayPendingState.cabc !== displaySavedState.cabc;
 
-    indicator.classList.toggle('hidden', !hasChanges);
+    window.setPendingIndicator('display-pending-indicator', hasChanges);
 }
 
 function renderDisplayCard() {
@@ -155,12 +152,7 @@ function initDisplayTweak() {
             });
         }
 
-        document.getElementById('display-btn-save')?.addEventListener('click', saveDisplay);
-        document.getElementById('display-btn-apply')?.addEventListener('click', applyDisplay);
-        document.getElementById('display-btn-save-apply')?.addEventListener('click', async () => {
-            await saveDisplay();
-            await applyDisplay();
-        });
+        window.bindSaveApplyButtons('display', saveDisplay, applyDisplay);
 
         document.addEventListener('languageChanged', () => {
             renderDisplayCard();

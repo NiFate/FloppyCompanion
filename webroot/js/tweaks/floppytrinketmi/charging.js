@@ -27,14 +27,11 @@ function renderChargingCard() {
 }
 
 function updateChargingPendingIndicator() {
-    const indicator = document.getElementById('charging-pending-indicator');
-    if (!indicator) return;
-
     const hasChanges =
         chargingPendingState.bypass !== chargingSavedState.bypass ||
         chargingPendingState.fast !== chargingSavedState.fast;
 
-    indicator.classList.toggle('hidden', !hasChanges);
+    window.setPendingIndicator('charging-pending-indicator', hasChanges);
 }
 
 async function loadChargingState() {
@@ -127,12 +124,7 @@ async function initChargingTweak() {
         });
     }
 
-    document.getElementById('charging-btn-save')?.addEventListener('click', saveCharging);
-    document.getElementById('charging-btn-apply')?.addEventListener('click', applyCharging);
-    document.getElementById('charging-btn-save-apply')?.addEventListener('click', async () => {
-        await saveCharging();
-        await applyCharging();
-    });
+    window.bindSaveApplyButtons('charging', saveCharging, applyCharging);
 
     document.addEventListener('languageChanged', () => {
         renderChargingCard();

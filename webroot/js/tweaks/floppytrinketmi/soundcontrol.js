@@ -43,19 +43,12 @@ function renderSoundControlCard() {
 }
 
 function updateSoundControlPendingIndicator() {
-    const indicator = document.getElementById('soundcontrol-pending-indicator');
-    if (!indicator) return;
-
     const hasChanges =
         scPendingState.hp_l !== scSavedState.hp_l ||
         scPendingState.hp_r !== scSavedState.hp_r ||
         scPendingState.mic !== scSavedState.mic;
 
-    if (hasChanges) {
-        indicator.classList.remove('hidden');
-    } else {
-        indicator.classList.add('hidden');
-    }
+    window.setPendingIndicator('soundcontrol-pending-indicator', hasChanges);
 }
 
 function toggleSoundControlSplitMode(split) {
@@ -264,12 +257,7 @@ function initSoundControlTweak() {
     });
 
     // Button handlers
-    document.getElementById('soundcontrol-btn-save')?.addEventListener('click', saveSoundControl);
-    document.getElementById('soundcontrol-btn-apply')?.addEventListener('click', applySoundControl);
-    document.getElementById('soundcontrol-btn-save-apply')?.addEventListener('click', async () => {
-        await saveSoundControl();
-        await applySoundControl();
-    });
+    window.bindSaveApplyButtons('soundcontrol', saveSoundControl, applySoundControl);
 
     // Load initial state
     loadSoundControlState();

@@ -119,9 +119,6 @@ function renderThermalCard() {
 
 // Update pending indicator
 function updateThermalPendingIndicator() {
-    const indicator = document.getElementById('thermal-pending-indicator');
-    if (!indicator) return;
-
     // If no saved config exists yet, compare against current kernel state (no "unsaved" on first load)
     const hasSavedConfig = thermalSavedState.mode !== undefined && thermalSavedState.mode !== '';
     const referenceMode = hasSavedConfig ? thermalSavedState.mode : thermalCurrentState.mode;
@@ -130,11 +127,7 @@ function updateThermalPendingIndicator() {
     const hasChanges = thermalPendingState.mode !== referenceMode ||
         (thermalPendingState.mode === '2' && thermalPendingState.custom_freq !== referenceFreq);
 
-    if (hasChanges) {
-        indicator.classList.remove('hidden');
-    } else {
-        indicator.classList.add('hidden');
-    }
+    window.setPendingIndicator('thermal-pending-indicator', hasChanges);
 }
 
 // Select thermal mode
@@ -203,16 +196,7 @@ function initThermalTweak() {
     }
 
     // Wire up action buttons
-    const saveBtn = document.getElementById('thermal-btn-save');
-    const applyBtn = document.getElementById('thermal-btn-apply');
-    const saveApplyBtn = document.getElementById('thermal-btn-save-apply');
-
-    if (saveBtn) saveBtn.addEventListener('click', saveThermal);
-    if (applyBtn) applyBtn.addEventListener('click', applyThermal);
-    if (saveApplyBtn) saveApplyBtn.addEventListener('click', async () => {
-        await saveThermal();
-        await applyThermal();
-    });
+    window.bindSaveApplyButtons('thermal', saveThermal, applyThermal);
 
     // Re-render on language change to update description text
     document.addEventListener('languageChanged', () => {

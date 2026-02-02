@@ -379,6 +379,25 @@ window.getDefaultTweakPreset = function (tweakId) {
     return defaults?.tweaks?.[tweakId] || {};
 };
 
+window.setPendingIndicator = function (indicatorId, hasPending) {
+    const indicator = document.getElementById(indicatorId);
+    if (!indicator) return;
+    indicator.classList.toggle('hidden', !hasPending);
+};
+
+window.bindSaveApplyButtons = function (prefix, saveFn, applyFn) {
+    const btnSave = document.getElementById(`${prefix}-btn-save`);
+    const btnApply = document.getElementById(`${prefix}-btn-apply`);
+    const btnSaveApply = document.getElementById(`${prefix}-btn-save-apply`);
+
+    if (btnSave) btnSave.addEventListener('click', saveFn);
+    if (btnApply) btnApply.addEventListener('click', applyFn);
+    if (btnSaveApply) btnSaveApply.addEventListener('click', async () => {
+        await saveFn();
+        await applyFn();
+    });
+};
+
 // Expose toast function if not already available
 if (typeof showToast === 'undefined') {
     window.showToast = function (message, isError = false) {

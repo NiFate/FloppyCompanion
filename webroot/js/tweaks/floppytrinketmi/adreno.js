@@ -48,9 +48,6 @@ function updateAdrenoboostOptions(selectedValue) {
 }
 
 function updateAdrenoPendingIndicator() {
-    const indicator = document.getElementById('adreno-pending-indicator');
-    if (!indicator) return;
-
     const hasChanges =
         adrenoPendingState.adrenoboost !== adrenoSavedState.adrenoboost ||
         adrenoPendingState.idler_active !== adrenoSavedState.idler_active ||
@@ -58,7 +55,7 @@ function updateAdrenoPendingIndicator() {
         adrenoPendingState.idler_idlewait !== adrenoSavedState.idler_idlewait ||
         adrenoPendingState.idler_idleworkload !== adrenoSavedState.idler_idleworkload;
 
-    indicator.classList.toggle('hidden', !hasChanges);
+    window.setPendingIndicator('adreno-pending-indicator', hasChanges);
 }
 
 function renderAdrenoCard() {
@@ -297,12 +294,7 @@ function initAdrenoTweak() {
             });
         }
 
-        document.getElementById('adreno-btn-save')?.addEventListener('click', saveAdreno);
-        document.getElementById('adreno-btn-apply')?.addEventListener('click', applyAdreno);
-        document.getElementById('adreno-btn-save-apply')?.addEventListener('click', async () => {
-            await saveAdreno();
-            await applyAdreno();
-        });
+        window.bindSaveApplyButtons('adreno', saveAdreno, applyAdreno);
 
         document.addEventListener('languageChanged', () => {
             renderAdrenoCard();

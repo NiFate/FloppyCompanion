@@ -98,9 +98,6 @@ function updateMemInput(key) {
 }
 
 function updateMemoryPendingIndicator() {
-    const indicator = document.getElementById('mem-pending-indicator');
-    if (!indicator) return;
-
     // Simple check: compare JSON strings of interesting keys
     // In a real generic system we'd do deep compare, but here we know the keys
     const paramKeys = ['swappiness', 'dirty_ratio', 'dirty_bytes', 'dirty_background_ratio',
@@ -118,8 +115,7 @@ function updateMemoryPendingIndicator() {
         }
     }
 
-    if (hasPending) indicator.classList.remove('hidden');
-    else indicator.classList.add('hidden');
+    window.setPendingIndicator('mem-pending-indicator', hasPending);
 }
 
 // Input Change Handlers
@@ -239,14 +235,7 @@ function initMemoryTweak() {
     // Buttons
     const btnSave = document.getElementById('mem-btn-save');
     const btnApply = document.getElementById('mem-btn-apply');
-    const btnSaveApply = document.getElementById('mem-btn-save-apply');
-
-    if (btnSave) btnSave.addEventListener('click', saveMemory);
-    if (btnApply) btnApply.addEventListener('click', applyMemory);
-    if (btnSaveApply) btnSaveApply.addEventListener('click', async () => {
-        await saveMemory();
-        await applyMemory();
-    });
+    window.bindSaveApplyButtons('mem', saveMemory, applyMemory);
 
     loadMemoryState();
 
