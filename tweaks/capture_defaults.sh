@@ -6,6 +6,38 @@ MODDIR="${0%/*}/.."
 DATA_DIR="/data/adb/floppy_companion"
 OUTPUT_FILE="$DATA_DIR/presets/.defaults.json"
 
+# Detect kernel family (best-effort, aligned with WebUI logic)
+KERN_VER=$(uname -r 2>/dev/null || echo "")
+IS_1280=0
+IS_TRINKET=0
+
+DEVICE_NAME=""
+if [ -f /sys/kernel/sec_detect/device_name ]; then
+  DEVICE_NAME=$(cat /sys/kernel/sec_detect/device_name 2>/dev/null)
+elif [ -f /sys/mi_detect/device_name ]; then
+  DEVICE_NAME=$(cat /sys/mi_detect/device_name 2>/dev/null)
+fi
+
+DEVICE_CODE=$(echo "$DEVICE_NAME" | tr 'A-Z' 'a-z')
+TRINKET_DEVICES="ginkgo willow sm6125 trinket laurel_sprout"
+FLOPPY1280_DEVICES="a25x a33x a53x m33x m34x gta4xls a26xs"
+
+for d in $TRINKET_DEVICES; do
+  if echo "$DEVICE_CODE" | grep -q "$d"; then
+    IS_TRINKET=1
+    break
+  fi
+done
+
+if [ "$IS_TRINKET" != "1" ]; then
+  for d in $FLOPPY1280_DEVICES; do
+    if echo "$DEVICE_CODE" | grep -q "$d"; then
+      IS_1280=1
+      break
+    fi
+  done
+fi
+
 # Create presets directory
 mkdir -p "$DATA_DIR/presets"
 
@@ -80,7 +112,10 @@ if [ -f "$MODDIR/tweaks/iosched.sh" ]; then
     '
 fi
 )
-    },
+    }$(
+    if [ "$IS_1280" = "1" ]; then
+      cat << EOF_1280
+,
     "thermal": {
       "mode": "$(cat /sys/devices/platform/10080000.BIG/thermal_mode 2>/dev/null || echo 1)",
       "custom_freq": "$(cat /sys/devices/platform/10080000.BIG/emergency_frequency 2>/dev/null || echo 2288000)"
@@ -94,7 +129,11 @@ fi
       "block_ed3": "$(cat /sys/devices/virtual/sec/tsp/block_ed3 2>/dev/null || echo 0)",
       "gpu_clklck": "$(cat /sys/kernel/gpu/gpu_clklck 2>/dev/null || echo 0)",
       "gpu_unlock": "$(cat /sys/kernel/gpu/gpu_unlock 2>/dev/null || echo 0)"
-    },
+    }
+EOF_1280
+    elif [ "$IS_TRINKET" = "1" ]; then
+    cat << EOF_TRINKET
+,
     "soundcontrol": {
       "hp_l": "$(cat /sys/kernel/sound_control/headphone_gain 2>/dev/null | awk '{print $1}' || echo 0)",
       "hp_r": "$(cat /sys/kernel/sound_control/headphone_gain 2>/dev/null | awk '{print $2}' || echo 0)",
@@ -118,6 +157,9 @@ fi
     "misc_trinket": {
       "touchboost": "$(cat /sys/module/msm_performance/parameters/touchboost 2>/dev/null || echo 0)"
     }
+EOF_TRINKET
+    fi
+)
   }
 }
 EOF
