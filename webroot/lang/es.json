@@ -241,7 +241,15 @@
         "settingsFailed": "Error al aplicar configuración",
         "logSaved": "Registro guardado en {path}",
         "logFailed": "Error al guardar registro",
-        "copied": "Copiado al portapapeles"
+        "copied": "Copiado al portapapeles",
+        "presetLoadFailed": "Error al cargar el preajuste",
+        "presetDefaultApplied": "Preajuste predeterminado aplicado",
+        "presetDefaultLoaded": "Preajuste predeterminado cargado",
+        "presetSavedApplied": "Preajuste guardado y aplicado",
+        "presetLoadedSaved": "Preajuste cargado y guardado",
+        "presetExportBuiltIn": "No se pueden exportar preajustes integrados",
+        "presetInvalidFile": "Archivo de preajuste inválido",
+        "presetDeleteBuiltIn": "No se pueden eliminar preajustes integrados"
     },
     "modal": {
         "confirm": "Confirmar",

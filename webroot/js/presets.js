@@ -196,7 +196,7 @@ async function handleLoadPreset() {
     }
 
     if (!presetData) {
-        showToast('Failed to load preset', true);
+        showToast(t('toast.presetLoadFailed'), true);
         return;
     }
 
@@ -211,9 +211,9 @@ async function handleLoadPreset() {
 
         if (action === 'apply') {
             await applyAllTweaks();
-            showToast('Default preset applied');
+            showToast(t('toast.presetDefaultApplied'));
         } else {
-            showToast('Default preset loaded');
+            showToast(t('toast.presetDefaultLoaded'));
         }
         return;
     }
@@ -224,9 +224,9 @@ async function handleLoadPreset() {
     if (action === 'apply') {
         // Apply all tweaks immediately
         await applyAllTweaks();
-        showToast('Preset saved & applied');
+        showToast(t('toast.presetSavedApplied'));
     } else {
-        showToast('Preset loaded & saved');
+        showToast(t('toast.presetLoadedSaved'));
     }
 }
 
@@ -289,7 +289,7 @@ PRESET_EOF`);
 // Handle Export button click
 async function handleExportPreset() {
     if (currentPresetBuiltIn) {
-        showToast('Cannot export built-in presets', true);
+        showToast(t('toast.presetExportBuiltIn'), true);
         return;
     }
 
@@ -347,7 +347,7 @@ async function handleImportPreset() {
     try {
         presetData = JSON.parse(content);
     } catch (e) {
-        showToast('Invalid preset file', true);
+        showToast(t('toast.presetInvalidFile'), true);
         return;
     }
 
@@ -376,7 +376,7 @@ PRESET_EOF`);
 // Handle Delete button click
 async function handleDeletePreset() {
     if (currentPresetBuiltIn) {
-        showToast('Cannot delete built-in presets', true);
+        showToast(t('toast.presetDeleteBuiltIn'), true);
         return;
     }
 

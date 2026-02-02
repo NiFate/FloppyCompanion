@@ -240,7 +240,15 @@
         "settingsFailed": "Failed to apply settings",
         "logSaved": "Log saved to {path}",
         "logFailed": "Failed to save log",
-        "copied": "Copied to clipboard"
+        "copied": "Copied to clipboard",
+        "presetLoadFailed": "Failed to load preset",
+        "presetDefaultApplied": "Default preset applied",
+        "presetDefaultLoaded": "Default preset loaded",
+        "presetSavedApplied": "Preset saved & applied",
+        "presetLoadedSaved": "Preset loaded & saved",
+        "presetExportBuiltIn": "Cannot export built-in presets",
+        "presetInvalidFile": "Invalid preset file",
+        "presetDeleteBuiltIn": "Cannot delete built-in presets"
     },
     "modal": {
         "confirm": "Confirm",
