@@ -62,6 +62,11 @@ async function loadDefaultPreset() {
     }
 }
 
+async function clearAllTweakConfigs() {
+    const configDir = '/data/adb/floppy_companion/config';
+    await exec(`rm -f "${configDir}"/*.conf 2>/dev/null || true`);
+}
+
 // Load a preset file
 async function loadPresetFile(path) {
     const content = await exec(`cat "${path}" 2>/dev/null || echo "{}"`);
@@ -174,7 +179,20 @@ async function handleLoadPreset() {
     // Load to UI
     loadPresetToUI(presetData);
 
-    // Always save tweaks to persistence
+    if (currentPresetName === 'Default') {
+        // Clear persisted configs so defaults come from kernel snapshot
+        await clearAllTweakConfigs();
+
+        if (action === 'apply') {
+            await applyAllTweaks();
+            showToast('Default preset applied');
+        } else {
+            showToast('Default preset loaded');
+        }
+        return;
+    }
+
+    // Always save non-default presets to persistence
     await saveAllTweaks();
 
     if (action === 'apply') {
