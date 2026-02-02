@@ -3,6 +3,7 @@
         "home": "Home",
         "features": "Features",
         "tweaks": "Tweaks",
+        "monitor": "Monitor",
         "about": "About"
     },
     "home": {
@@ -46,6 +47,9 @@
         "tooltipReadOnlyBlocked": "This feature's state cannot be changed from the UI normally (read-only).",
         "tooltipExperimental": "Experimental",
         "currentLabel": "Current:"
+    },
+    "monitor": {
+        "title": "Monitor"
     },
     "tweaks": {
         "title": "Tweaks",

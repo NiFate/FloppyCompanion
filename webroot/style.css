@@ -585,14 +585,14 @@ body {
 
 .slider-track {
     display: flex;
-    width: 400%;
-    /* 4 Tabs */
+    width: 500%;
+    /* 5 Tabs */
     transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
     /* Material Decelerate Easing */
 }
 
 .tab-content {
-    width: 25%;
+    width: 20%;
     flex-shrink: 0;
     height: 100vh;
     overflow-y: auto;
@@ -698,8 +698,13 @@ body {
 }
 
 .nav-item .label {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 500;
+    line-height: 1.1;
+    max-width: 72px;
+    text-align: center;
+    white-space: normal;
+    letter-spacing: -0.2px;
 }
 
 /* Icon Utilities */

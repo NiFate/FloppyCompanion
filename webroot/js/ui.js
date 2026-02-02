@@ -1,6 +1,6 @@
 // ui.js - Navigation, Tabs, and Layout
 
-const TAB_COUNT = 4; // Status, Features, Tweaks, About
+const TAB_COUNT = 5; // Status, Features, Tweaks, Monitor, About
 let currentIndex = 0;
 
 // Track whether a tab can be opened.
@@ -53,8 +53,8 @@ function updateSlide(index) {
     // --- Theme Toggle Visibility ---
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
-        // 'About' tab is index 3
-        if (index === 3) {
+        // 'About' tab is index 4
+        if (index === 4) {
             themeBtn.style.opacity = '1';
             themeBtn.style.pointerEvents = 'auto';
         } else {
@@ -110,14 +110,14 @@ function updateSlide(index) {
     });
 
     // Slide track
-    const percentage = nextIndex * -25;
+    const percentage = nextIndex * -20;
     const sliderTrack = document.getElementById('slider-track');
     if (sliderTrack) {
         sliderTrack.style.transform = `translateX(${percentage}%)`;
     }
 
     // Handle FAB visibility logic
-    // Status=0, Features=1, Tweaks=2, About=3
+    // Status=0, Features=1, Tweaks=2, Monitor=3, About=4
     const fabContainer = document.querySelector('.fab-container');
     if (fabContainer) {
         fabContainer.style.display = (nextIndex === 1) ? 'flex' : 'none';
@@ -213,16 +213,16 @@ function initNavigation() {
 
         // Calculate resistance or limit
         // Current translate percentage
-        const baseTranslate = currentIndex * -25; // %
+        const baseTranslate = currentIndex * -20; // %
         // Convert diff to percentage of container width
         const containerWidth = sliderContainer.offsetWidth;
-        const diffPercent = (diff / containerWidth) * 100 / 4; // /4 because track is 400%
+        const diffPercent = (diff / containerWidth) * 100 / 5; // /5 because track is 500%
 
         let newTranslate = baseTranslate + diffPercent;
 
         // Form boundaries with resistance
         if (newTranslate > 0) newTranslate = newTranslate * 0.3;
-        if (newTranslate < -75) newTranslate = -75 + (newTranslate + 75) * 0.3;
+        if (newTranslate < -80) newTranslate = -80 + (newTranslate + 80) * 0.3;
 
         sliderTrack.style.transform = `translateX(${newTranslate}%)`;
     }, { passive: true });
