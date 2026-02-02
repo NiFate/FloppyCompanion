@@ -1572,6 +1572,63 @@ body {
     font-weight: 600;
 }
 
+.monitor-cpu-current {
+    color: var(--md-sys-color-primary);
+    font-weight: 600;
+}
+
+.monitor-cpu-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: -4px;
+}
+
+.monitor-cpu-toggle.segmented-control {
+    width: 100%;
+    margin-bottom: 0;
+    padding: 3px;
+    border-radius: 16px;
+}
+
+.monitor-cpu-toggle.segmented-control label {
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+}
+
+.monitor-cpu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.monitor-cpu-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.monitor-cpu-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.monitor-cpu-item-title {
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.monitor-empty {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 13px;
+    padding: 6px 0;
+}
+
 .card-header {
     display: flex;
     align-items: center;

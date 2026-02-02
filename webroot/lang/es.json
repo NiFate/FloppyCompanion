@@ -67,6 +67,29 @@
             "dirtyBackgroundBytes": "Dirty background bytes",
             "usedSuffix": "usado",
             "totalSuffix": "total"
+        },
+        "cpu": {
+            "title": "CPU",
+            "viewCluster": "Por clúster",
+            "viewCore": "Por núcleo",
+            "freqSection": "Núcleos",
+            "statusSection": "Funciones",
+            "currentLabel": "Actual",
+            "minLabel": "Mín",
+            "maxLabel": "Máx",
+            "govLabel": "Gobernador",
+            "clusterLittle": "Clúster pequeño",
+            "clusterBig": "Clúster grande",
+            "clusterMid": "Clúster medio",
+            "unlockedMode": "Modo Unlocked",
+            "emsEfficient": "EMS eficiente",
+            "msmPerfBoost": "MSM Perf Boost",
+            "enabled": "Activado",
+            "disabled": "Desactivado",
+            "off": "Apagado",
+            "noData": "No hay datos de CPU",
+            "clusterLabel": "Clúster {id}",
+            "cpuLabel": "CPU {id}"
         }
     },
     "tweaks": {
