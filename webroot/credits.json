@@ -46,6 +46,15 @@
                     "url": "https://github.com/NiFate"
                 }
             ]
+        },
+        "ru": {
+            "name": "Русский",
+            "contributors": [
+                {
+                    "name": "ronin_blade",
+                    "url": "https://github.com/golkov1993"
+                }
+            ]
         }
     }
 }
