@@ -91,6 +91,20 @@
             "noData": "No CPU data available",
             "clusterLabel": "Cluster {id}",
             "cpuLabel": "CPU {id}"
+        },
+        "gpu": {
+            "title": "GPU",
+            "freqSection": "Frequency",
+            "statusSection": "Features",
+            "currentLabel": "Current",
+            "minLabel": "Min",
+            "maxLabel": "Max",
+            "govLabel": "Governor",
+            "gpuUnlock": "GPU Unlock",
+            "gpuClockLock": "GPU Clock Lock",
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "noData": "No GPU data available"
         }
     },
     "tweaks": {

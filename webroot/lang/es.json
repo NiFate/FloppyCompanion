@@ -91,6 +91,20 @@
             "noData": "No hay datos de CPU",
             "clusterLabel": "Clúster {id}",
             "cpuLabel": "CPU {id}"
+        },
+        "gpu": {
+            "title": "GPU",
+            "freqSection": "Frecuencia",
+            "statusSection": "Funciones",
+            "currentLabel": "Actual",
+            "minLabel": "Mín",
+            "maxLabel": "Máx",
+            "govLabel": "Gobernador",
+            "gpuUnlock": "GPU Unlock",
+            "gpuClockLock": "GPU Clock Lock",
+            "enabled": "Activado",
+            "disabled": "Desactivado",
+            "noData": "No hay datos de GPU"
         }
     },
     "tweaks": {

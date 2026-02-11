@@ -1173,6 +1173,33 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="card monitor-card collapsed" id="monitor-gpu-card">
+                        <div class="card-header">
+                            <span class="card-title" data-i18n="monitor.gpu.title">GPU</span>
+                            <button id="monitor-gpu-toggle" class="icon-button monitor-toggle" aria-label="Toggle GPU" aria-expanded="false">
+                                <svg class="icon-svg" viewBox="0 0 24 24" data-icon="expand_more"></svg>
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <div class="monitor-section">
+                                <div class="monitor-section-title" data-i18n="monitor.gpu.freqSection">Frequency</div>
+                                <div id="monitor-gpu-info" class="monitor-cpu-list"></div>
+                            </div>
+
+                            <div class="monitor-section" id="monitor-gpu-status" style="display: none;">
+                                <div class="monitor-section-title" data-i18n="monitor.gpu.statusSection">Features</div>
+                                <div class="monitor-stat-row" id="monitor-gpu-unlock-row">
+                                    <span class="monitor-stat-label" data-i18n="monitor.gpu.gpuUnlock">GPU Unlock</span>
+                                    <span class="monitor-stat-value" id="monitor-gpu-unlock-value">--</span>
+                                </div>
+                                <div class="monitor-stat-row" id="monitor-gpu-clklck-row">
+                                    <span class="monitor-stat-label" data-i18n="monitor.gpu.gpuClockLock">GPU Clock Lock</span>
+                                    <span class="monitor-stat-value" id="monitor-gpu-clklck-value">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

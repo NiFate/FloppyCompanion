@@ -619,6 +619,32 @@
         };
     }
 
+    async function fetchGpuData() {
+        const GPU_SYSFS = '/sys/kernel/gpu';
+        const cmd = [
+            `cat ${GPU_SYSFS}/gpu_clock 2>/dev/null`,
+            `cat ${GPU_SYSFS}/gpu_min_clock 2>/dev/null`,
+            `cat ${GPU_SYSFS}/gpu_max_clock 2>/dev/null`,
+            `cat ${GPU_SYSFS}/gpu_governor 2>/dev/null`,
+            `cat ${GPU_SYSFS}/gpu_unlock 2>/dev/null`,
+            `cat ${GPU_SYSFS}/gpu_clklck 2>/dev/null`,
+            `cat ${GPU_SYSFS}/gpu_model 2>/dev/null`
+        ].join('; echo __SEP__; ');
+
+        const output = await window.exec(cmd);
+        if (!output) return null;
+        const parts = output.split('__SEP__').map(p => p.trim());
+        return {
+            cur: parts[0] || '',
+            min: parts[1] || '',
+            max: parts[2] || '',
+            gov: parts[3] || '',
+            unlock: parts[4] || '',
+            clklck: parts[5] || '',
+            model: parts[6] || ''
+        };
+    }
+
     function parseZramAlgorithm(raw) {
         const match = raw.match(/\[([^\]]+)\]/);
         if (match) return match[1];
@@ -697,14 +723,100 @@
         updateCpuStatus(data.cmdline);
     }
 
+    function updateGpuUI(data) {
+        if (!data) return;
+
+        const list = document.getElementById('monitor-gpu-info');
+        if (list) {
+            list.innerHTML = '';
+
+            const currentLabel = window.t ? t('monitor.gpu.currentLabel') : 'Current';
+            const minLabel = window.t ? t('monitor.gpu.minLabel') : 'Min';
+            const maxLabel = window.t ? t('monitor.gpu.maxLabel') : 'Max';
+            const govLabel = window.t ? t('monitor.gpu.govLabel') : 'Governor';
+
+            if (!data.cur && !data.min && !data.max) {
+                const empty = document.createElement('div');
+                empty.className = 'monitor-empty';
+                empty.textContent = window.t ? t('monitor.gpu.noData') : 'No GPU data available';
+                list.appendChild(empty);
+            } else {
+                // Model title (if available)
+                if (data.model) {
+                    const title = document.createElement('div');
+                    title.className = 'monitor-cpu-item-title';
+                    title.textContent = data.model;
+                    list.appendChild(title);
+                }
+
+                const rows = [
+                    { label: currentLabel, value: data.cur, isCurrent: true },
+                    { label: minLabel, value: data.min, isCurrent: false },
+                    { label: maxLabel, value: data.max, isCurrent: false },
+                    { label: govLabel, value: data.gov || '--', isCurrent: false, isText: true }
+                ];
+
+                rows.forEach(({ label, value, isCurrent, isText }) => {
+                    const row = document.createElement('div');
+                    row.className = 'monitor-stat-row';
+                    const labelEl = document.createElement('span');
+                    labelEl.className = 'monitor-stat-label';
+                    labelEl.textContent = label;
+                    const valEl = document.createElement('span');
+                    valEl.className = 'monitor-stat-value' + (isCurrent ? ' monitor-cpu-current' : '');
+                    valEl.textContent = isText ? value : formatFreq(value);
+                    row.appendChild(labelEl);
+                    row.appendChild(valEl);
+                    list.appendChild(row);
+                });
+            }
+        }
+
+        // GPU features status (Floppy1280 only)
+        const kernelName = window.KERNEL_NAME || '';
+        const is1280 = kernelName === 'Floppy1280';
+
+        const enabledLabel = window.t ? t('monitor.gpu.enabled') : 'Enabled';
+        const disabledLabel = window.t ? t('monitor.gpu.disabled') : 'Disabled';
+
+        const unlockRow = document.getElementById('monitor-gpu-unlock-row');
+        const clklckRow = document.getElementById('monitor-gpu-clklck-row');
+        const statusSection = document.getElementById('monitor-gpu-status');
+
+        const hasUnlock = data.unlock !== '';
+        const hasClklck = data.clklck !== '';
+        const showStatus = is1280 && (hasUnlock || hasClklck);
+
+        if (statusSection) {
+            statusSection.style.display = showStatus ? '' : 'none';
+        }
+
+        if (showStatus) {
+            if (unlockRow) {
+                setVisible(unlockRow, hasUnlock);
+                if (hasUnlock) {
+                    setText('monitor-gpu-unlock-value', isEnabledValue(data.unlock) ? enabledLabel : disabledLabel);
+                }
+            }
+            if (clklckRow) {
+                setVisible(clklckRow, hasClklck);
+                if (hasClklck) {
+                    setText('monitor-gpu-clklck-value', isEnabledValue(data.clklck) ? enabledLabel : disabledLabel);
+                }
+            }
+        }
+    }
+
     async function refreshMonitor() {
         if (!isMonitorActive || document.hidden) return;
-        const [memData, cpuData] = await Promise.all([
+        const [memData, cpuData, gpuData] = await Promise.all([
             fetchMonitorData(),
-            fetchCpuData()
+            fetchCpuData(),
+            fetchGpuData()
         ]);
         updateMonitorUI(memData);
         updateCpuUI(cpuData);
+        updateGpuUI(gpuData);
     }
 
     function startMonitorUpdates() {
@@ -737,6 +849,7 @@
 
         setupCollapse('monitor-memory-card', 'monitor-memory-toggle');
         setupCollapse('monitor-cpu-card', 'monitor-cpu-toggle');
+        setupCollapse('monitor-gpu-card', 'monitor-gpu-toggle');
 
         document.addEventListener('tabChanged', (event) => {
             const idx = event?.detail?.index;
