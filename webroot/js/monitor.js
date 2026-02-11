@@ -130,27 +130,33 @@
             .map((row, idx) => ({
                 idx,
                 id: String(row.id || ''),
-                max: Number(row.max || 0)
+                policyNum: parseInt(String(row.id || '').replace(/\D/g, ''), 10)
             }))
-            .filter(item => item.max > 0);
+            .filter(item => !isNaN(item.policyNum));
 
         if (clusters.length === 0) return {};
 
-        clusters.sort((a, b) => a.max - b.max);
+        // Sort by policy ID number (physical CPU order) instead of
+        // dynamic max freq, which changes during thermal throttling.
+        clusters.sort((a, b) => a.policyNum - b.policyNum);
         const roleMap = {};
         const littleKey = window.t ? t('monitor.cpu.clusterLittle') : 'Little cluster';
         const bigKey = window.t ? t('monitor.cpu.clusterBig') : 'Big cluster';
         const midKey = window.t ? t('monitor.cpu.clusterMid') : 'Middle cluster';
+        const primeKey = window.t ? t('monitor.cpu.clusterPrime') : 'Prime cluster';
 
         if (clusters.length === 1) {
             roleMap[clusters[0].id] = bigKey;
             return roleMap;
         }
 
+        // 2 clusters: Little, Big
+        // 3+ clusters: Little, Mid(s), Prime
         roleMap[clusters[0].id] = littleKey;
-        roleMap[clusters[clusters.length - 1].id] = bigKey;
-
-        if (clusters.length > 2) {
+        if (clusters.length === 2) {
+            roleMap[clusters[1].id] = bigKey;
+        } else {
+            roleMap[clusters[clusters.length - 1].id] = primeKey;
             for (let i = 1; i < clusters.length - 1; i++) {
                 roleMap[clusters[i].id] = midKey;
             }
