@@ -1189,13 +1189,43 @@
 
                             <div class="monitor-section" id="monitor-gpu-status" style="display: none;">
                                 <div class="monitor-section-title" data-i18n="monitor.gpu.statusSection">Features</div>
-                                <div class="monitor-stat-row" id="monitor-gpu-unlock-row">
+                                <div class="monitor-stat-row" id="monitor-gpu-unlock-row" style="display: none;">
                                     <span class="monitor-stat-label" data-i18n="monitor.gpu.gpuUnlock">GPU Unlock</span>
                                     <span class="monitor-stat-value" id="monitor-gpu-unlock-value">--</span>
                                 </div>
-                                <div class="monitor-stat-row" id="monitor-gpu-clklck-row">
+                                <div class="monitor-stat-row" id="monitor-gpu-clklck-row" style="display: none;">
                                     <span class="monitor-stat-label" data-i18n="monitor.gpu.gpuClockLock">GPU Clock Lock</span>
                                     <span class="monitor-stat-value" id="monitor-gpu-clklck-value">--</span>
+                                </div>
+
+                                <!-- Adrenoboost Section -->
+                                <div class="monitor-cpu-item" id="monitor-gpu-adrenoboost-section" style="display: none;">
+                                    <div class="monitor-cpu-item-title">Adrenoboost</div>
+                                    <div class="monitor-stat-row">
+                                        <span class="monitor-stat-label">Boost Level</span>
+                                        <span class="monitor-stat-value" id="monitor-gpu-adrenoboost-value">--</span>
+                                    </div>
+                                </div>
+
+                                <!-- Adreno Idler Section -->
+                                <div class="monitor-cpu-item" id="monitor-gpu-idler-section" style="display: none;">
+                                    <div class="monitor-cpu-item-title">Adreno Idler</div>
+                                    <div class="monitor-stat-row">
+                                        <span class="monitor-stat-label">Status</span>
+                                        <span class="monitor-stat-value" id="monitor-gpu-idler-active-value">--</span>
+                                    </div>
+                                    <div class="monitor-stat-row" id="monitor-gpu-idler-downdiff-row">
+                                        <span class="monitor-stat-label" data-i18n="monitor.gpu.idlerDownDiff">Down Differential</span>
+                                        <span class="monitor-stat-value" id="monitor-gpu-idler-downdiff-value">--</span>
+                                    </div>
+                                    <div class="monitor-stat-row" id="monitor-gpu-idler-idlewait-row">
+                                        <span class="monitor-stat-label" data-i18n="monitor.gpu.idlerIdleWait">Idle Wait</span>
+                                        <span class="monitor-stat-value" id="monitor-gpu-idler-idlewait-value">--</span>
+                                    </div>
+                                    <div class="monitor-stat-row" id="monitor-gpu-idler-workload-row">
+                                        <span class="monitor-stat-label" data-i18n="monitor.gpu.idlerWorkload">Idle Workload</span>
+                                        <span class="monitor-stat-value" id="monitor-gpu-idler-workload-value">--</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1396,5 +1426,4 @@
     <script src="js/monitor.js"></script>
     <script src="js/main.js"></script>
 </body>
-
 </html>

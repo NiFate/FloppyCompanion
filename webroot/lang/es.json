@@ -102,6 +102,11 @@
             "govLabel": "Gobernador",
             "gpuUnlock": "GPU Unlock",
             "gpuClockLock": "GPU Clock Lock",
+            "adrenoboost": "Adrenoboost",
+            "idlerActive": "Adreno Idler",
+            "idlerDownDiff": "Down Differential",
+            "idlerIdleWait": "Idle Wait",
+            "idlerWorkload": "Idle Workload",
             "enabled": "Activado",
             "disabled": "Desactivado",
             "noData": "No hay datos de GPU"

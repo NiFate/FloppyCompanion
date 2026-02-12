@@ -140,10 +140,10 @@
         // dynamic max freq, which changes during thermal throttling.
         clusters.sort((a, b) => a.policyNum - b.policyNum);
         const roleMap = {};
-        const littleKey = window.t ? t('monitor.cpu.clusterLittle') : 'Little cluster';
-        const bigKey = window.t ? t('monitor.cpu.clusterBig') : 'Big cluster';
-        const midKey = window.t ? t('monitor.cpu.clusterMid') : 'Middle cluster';
-        const primeKey = window.t ? t('monitor.cpu.clusterPrime') : 'Prime cluster';
+        const littleKey = t('monitor.cpu.clusterLittle');
+        const bigKey = t('monitor.cpu.clusterBig');
+        const midKey = t('monitor.cpu.clusterMid');
+        const primeKey = t('monitor.cpu.clusterPrime');
 
         if (clusters.length === 1) {
             roleMap[clusters[0].id] = bigKey;
@@ -168,14 +168,14 @@
     function formatCpuLabel(row, roleMap, forceCluster = false) {
         if (cpuViewMode === 'core' && !forceCluster) {
             const coreId = String(row.id || '').replace('cpu', '');
-            const label = window.t ? t('monitor.cpu.cpuLabel', { id: coreId || '0' }) : `CPU ${coreId || '0'}`;
+            const label = t('monitor.cpu.cpuLabel', { id: coreId || '0' });
             return label;
         }
 
         const policyId = String(row.id || '').replace('policy', '');
         const range = getCpuRangeText(row.cpus);
         const role = roleMap ? roleMap[row.id] : null;
-        const base = role || (window.t ? t('monitor.cpu.clusterLabel', { id: policyId || '0' }) : `Cluster ${policyId || '0'}`);
+        const base = role || t('monitor.cpu.clusterLabel', { id: policyId || '0' });
         return range ? `${base} - ${policyId} (${range})` : `${base} - ${policyId}`;
     }
 
@@ -349,15 +349,15 @@
         if (!policyRows || policyRows.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'monitor-empty';
-            empty.textContent = window.t ? t('monitor.cpu.noData') : 'No CPU data available';
+            empty.textContent = t('monitor.cpu.noData');
             list.appendChild(empty);
             return;
         }
 
-        const currentLabel = window.t ? t('monitor.cpu.currentLabel') : 'Current';
-        const minLabel = window.t ? t('monitor.cpu.minLabel') : 'Min';
-        const maxLabel = window.t ? t('monitor.cpu.maxLabel') : 'Max';
-        const govLabel = window.t ? t('monitor.cpu.govLabel') : 'Governor';
+        const currentLabel = t('monitor.cpu.currentLabel');
+        const minLabel = t('monitor.cpu.minLabel');
+        const maxLabel = t('monitor.cpu.maxLabel');
+        const govLabel = t('monitor.cpu.govLabel');
         const roleMap = getClusterRoleMap(policyRows);
 
         if (cpuViewMode === 'core') {
@@ -383,7 +383,7 @@
                     const cpuLabel = document.createElement('span');
                     cpuLabel.className = 'monitor-stat-label';
                     const cpuNum = cpuId.replace('cpu', '');
-                    cpuLabel.textContent = window.t ? t('monitor.cpu.cpuLabel', { id: cpuNum }) : `CPU ${cpuNum}`;
+                    cpuLabel.textContent = t('monitor.cpu.cpuLabel', { id: cpuNum });
                     const cpuVal = document.createElement('span');
                     cpuVal.className = 'monitor-stat-value monitor-cpu-current';
                     cpuVal.textContent = formatFreq(coreMap[cpuId]);
@@ -506,9 +506,9 @@
         const emsRow = document.getElementById('monitor-ems-row');
         const msmRow = document.getElementById('monitor-msm-row');
 
-        const enabledLabel = window.t ? t('monitor.cpu.enabled') : 'Enabled';
-        const disabledLabel = window.t ? t('monitor.cpu.disabled') : 'Disabled';
-        const offLabel = window.t ? t('monitor.cpu.off') : 'Off';
+        const enabledLabel = t('monitor.cpu.enabled');
+        const disabledLabel = t('monitor.cpu.disabled');
+        const offLabel = t('monitor.cpu.off');
 
         const superfloppy = params.superfloppy;
         const ems = params.ems_efficient;
@@ -524,7 +524,7 @@
 
         if (showUnlocked) {
             if (superfloppy && superfloppy !== '0') {
-                const label = window.tf ? tf('superfloppy', 'label', superfloppy, '1280') : null;
+                const label = tf('superfloppy', 'label', superfloppy, '1280');
                 setText('monitor-unlocked-value', label || `${enabledLabel} (${superfloppy})`);
             } else {
                 setText('monitor-unlocked-value', offLabel);
@@ -619,29 +619,121 @@
         };
     }
 
+    // Helper to normalize GPU frequency values to kHz based on platform
+    function normalizeGpuKhz(value, explicitUnit) {
+        const n = Number(value);
+        if (isNaN(n) || n === 0) return '';
+        
+        // Use explicit unit if provided
+        if (explicitUnit === 'khz') return String(n);
+        if (explicitUnit === 'mhz') return String(n * 1000);
+        if (explicitUnit === 'hz') return String(Math.round(n / 1000));
+
+        // Detect platform from global deviceInfo OR fallback check
+        const info = window.deviceInfo || {};
+        const isTrinket = info.isTrinketMi || window._fallbackIsTrinket;
+        const is1280 = info.is1280; 
+        
+        // Auto-detect unit based on magnitude
+        // Hz: > 100,000,000 (e.g. 950,000,000) -> / 1000 -> kHz
+        // kHz: 20,000 - 2,000,000 (e.g. 1,200,000) -> keep -> kHz
+        // MHz: < 20,000 (e.g. 950) -> * 1000 -> kHz
+
+        if (n > 100000000) {
+            // Likely Hz (Adreno devfreq path)
+            return String(Math.round(n / 1000));
+        }
+        
+        if (n < 20000) {
+            // Likely MHz (Adreno legacy or accidental Exynos path)
+            return String(n * 1000);
+        }
+
+        // Likely kHz (Exynos native path)
+        return String(n);
+    }
+
     async function fetchGpuData() {
-        const GPU_SYSFS = '/sys/kernel/gpu';
-        const cmd = [
-            `cat ${GPU_SYSFS}/gpu_clock 2>/dev/null`,
-            `cat ${GPU_SYSFS}/gpu_min_clock 2>/dev/null`,
-            `cat ${GPU_SYSFS}/gpu_max_clock 2>/dev/null`,
-            `cat ${GPU_SYSFS}/gpu_governor 2>/dev/null`,
-            `cat ${GPU_SYSFS}/gpu_unlock 2>/dev/null`,
-            `cat ${GPU_SYSFS}/gpu_clklck 2>/dev/null`,
-            `cat ${GPU_SYSFS}/gpu_model 2>/dev/null`
+        const info = window.deviceInfo || {};
+        const isTrinket = info.isTrinketMi || window._fallbackIsTrinket;
+
+        // SKIP Exynos path if we know it's a Trinket device
+        if (!isTrinket) {
+            // ... (Exynos logic remains same) ...
+            // Try Exynos path first (/sys/kernel/gpu/) - This path ALWAYS reports in kHz
+            const GPU_SYSFS = '/sys/kernel/gpu';
+            const exynosCmd = [
+                `cat ${GPU_SYSFS}/gpu_clock 2>/dev/null`,
+                `cat ${GPU_SYSFS}/gpu_min_clock 2>/dev/null`,
+                `cat ${GPU_SYSFS}/gpu_max_clock 2>/dev/null`,
+                `cat ${GPU_SYSFS}/gpu_governor 2>/dev/null`,
+                `cat ${GPU_SYSFS}/gpu_unlock 2>/dev/null`,
+                `cat ${GPU_SYSFS}/gpu_clklck 2>/dev/null`,
+                `cat ${GPU_SYSFS}/gpu_model 2>/dev/null; true`
+            ].join('; echo __SEP__; ');
+
+            const exynosOut = await window.exec(exynosCmd);
+            if (exynosOut) {
+                const parts = exynosOut.split('__SEP__').map(p => p.trim());
+                if (parts[0]) {
+                    const model = parts[6] || '';
+                    const gpuData = {
+                        cur: normalizeGpuKhz(parts[0]),
+                        min: normalizeGpuKhz(parts[1]),
+                        max: normalizeGpuKhz(parts[2]),
+                        gov: parts[3] || '', 
+                        unlock: parts[4] || '',
+                        clklck: parts[5] || '', 
+                        model: model,
+                        adrenoboost: '', idlerActive: '',
+                        idlerDownDiff: '', idlerIdleWait: '', idlerWorkload: ''
+                    };
+                    return gpuData;
+                }
+            }
+        }
+
+        // Trinket / Adreno Path (Direct Sysfs Read)
+        const ADRENO_DEVFREQ = '/sys/devices/platform/soc/5900000.qcom,kgsl-3d0/devfreq/5900000.qcom,kgsl-3d0';
+        const ADRENO_IDLER = '/sys/module/adreno_idler/parameters';
+        
+        const adrenoCmd = [
+            `cat ${ADRENO_DEVFREQ}/cur_freq 2>/dev/null`,
+            `cat ${ADRENO_DEVFREQ}/min_freq 2>/dev/null`,
+            `cat ${ADRENO_DEVFREQ}/max_freq 2>/dev/null`,
+            `cat ${ADRENO_DEVFREQ}/governor 2>/dev/null`,
+            `cat /sys/class/kgsl/kgsl-3d0/gpu_model 2>/dev/null`,
+            // Features
+            `cat ${ADRENO_DEVFREQ}/adrenoboost 2>/dev/null || echo 0`,
+            `cat ${ADRENO_IDLER}/adreno_idler_active 2>/dev/null || echo N`,
+            `cat ${ADRENO_IDLER}/adreno_idler_downdifferential 2>/dev/null || echo 20`,
+            `cat ${ADRENO_IDLER}/adreno_idler_idlewait 2>/dev/null || echo 15`,
+            `cat ${ADRENO_IDLER}/adreno_idler_idleworkload 2>/dev/null || echo 5000`
         ].join('; echo __SEP__; ');
 
-        const output = await window.exec(cmd);
-        if (!output) return null;
-        const parts = output.split('__SEP__').map(p => p.trim());
+        const adrenoOut = await window.exec(adrenoCmd);
+        if (!adrenoOut) return { error: 'Adreno read failed' };
+
+        const parts = adrenoOut.split('__SEP__').map(p => p.trim());
+        // Map parts to variables
+        // [0]cur, [1]min, [2]max, [3]gov, [4]model, [5]boost, [6]active, [7]down, [8]wait, [9]work
+        
+        const rawCur = parts[0];
+        const normCur = normalizeGpuKhz(rawCur);
+
         return {
-            cur: parts[0] || '',
-            min: parts[1] || '',
-            max: parts[2] || '',
+            cur: normCur, 
+            min: normalizeGpuKhz(parts[1]),
+            max: normalizeGpuKhz(parts[2]), 
             gov: parts[3] || '',
-            unlock: parts[4] || '',
-            clklck: parts[5] || '',
-            model: parts[6] || ''
+            unlock: '', clklck: '', 
+            model: parts[4] || 'Adreno',
+            adrenoboost: parts[5] || '',
+            idlerActive: parts[6] || '',
+            idlerDownDiff: parts[7] || '',
+            idlerIdleWait: parts[8] || '',
+            idlerWorkload: parts[9] || '',
+            raw: adrenoOut
         };
     }
 
@@ -660,8 +752,8 @@
         const keyDirty = useBytes ? 'monitor.memory.dirtyBytes' : 'monitor.memory.dirtyRatio';
         const keyDirtyBg = useBytes ? 'monitor.memory.dirtyBackgroundBytes' : 'monitor.memory.dirtyBackgroundRatio';
 
-        labelDirty.textContent = window.t ? t(keyDirty) : keyDirty;
-        labelDirtyBg.textContent = window.t ? t(keyDirtyBg) : keyDirtyBg;
+        labelDirty.textContent = t(keyDirty);
+        labelDirtyBg.textContent = t(keyDirtyBg);
     }
 
     function updateMonitorUI(data) {
@@ -687,8 +779,8 @@
         drawGraph(document.getElementById('monitor-mem-graph'), memHistory, accent);
         drawGraph(document.getElementById('monitor-swap-graph'), swapHistory, accent);
 
-        const usedLabel = window.t ? t('monitor.memory.usedSuffix') : 'used';
-        const totalLabel = window.t ? t('monitor.memory.totalSuffix') : 'total';
+        const usedLabel = t('monitor.memory.usedSuffix');
+        const totalLabel = t('monitor.memory.totalSuffix');
         setText('monitor-mem-used', `${formatBytes(kbToBytes(usedKb))} ${usedLabel}`);
         setText('monitor-mem-total', `${formatBytes(kbToBytes(totalKb))} ${totalLabel}`);
         setText('monitor-swap-used', `${formatBytes(kbToBytes(swapUsedKb))} ${usedLabel}`);
@@ -726,84 +818,126 @@
     function updateGpuUI(data) {
         if (!data) return;
 
-        const list = document.getElementById('monitor-gpu-info');
-        if (list) {
-            list.innerHTML = '';
+        try {
+            const list = document.getElementById('monitor-gpu-info');
+            if (list) {
+                list.innerHTML = '';
 
-            const currentLabel = window.t ? t('monitor.gpu.currentLabel') : 'Current';
-            const minLabel = window.t ? t('monitor.gpu.minLabel') : 'Min';
-            const maxLabel = window.t ? t('monitor.gpu.maxLabel') : 'Max';
-            const govLabel = window.t ? t('monitor.gpu.govLabel') : 'Governor';
+                const currentLabel = window.t ? t('monitor.gpu.currentLabel') : 'Current';
+                const minLabel = window.t ? t('monitor.gpu.minLabel') : 'Min';
+                const maxLabel = window.t ? t('monitor.gpu.maxLabel') : 'Max';
+                const govLabel = window.t ? t('monitor.gpu.govLabel') : 'Governor';
 
-            if (!data.cur && !data.min && !data.max) {
-                const empty = document.createElement('div');
-                empty.className = 'monitor-empty';
-                empty.textContent = window.t ? t('monitor.gpu.noData') : 'No GPU data available';
-                list.appendChild(empty);
-            } else {
-                // Model title (if available)
-                if (data.model) {
-                    const title = document.createElement('div');
-                    title.className = 'monitor-cpu-item-title';
-                    title.textContent = data.model;
-                    list.appendChild(title);
+                if (!data.cur && !data.min && !data.max) {
+                    const empty = document.createElement('div');
+                    empty.className = 'monitor-empty';
+                    empty.textContent = window.t ? t('monitor.gpu.noData') : 'No GPU data available';
+                    list.appendChild(empty);
+                } else {
+                    // Model title (if available)
+                    if (data.model) {
+                        const title = document.createElement('div');
+                        title.className = 'monitor-cpu-item-title';
+                        title.textContent = data.model;
+                        list.appendChild(title);
+                    }
+
+                    const rows = [
+                        { label: currentLabel, value: data.cur, isCurrent: true },
+                        { label: minLabel, value: data.min, isCurrent: false },
+                        { label: maxLabel, value: data.max, isCurrent: false },
+                        { label: govLabel, value: data.gov || '--', isCurrent: false, isText: true }
+                    ];
+
+                    rows.forEach(r => {
+                        const row = document.createElement('div');
+                        row.className = 'monitor-stat-row';
+
+                        const labelEl = document.createElement('span');
+                        labelEl.className = 'monitor-stat-label';
+                        labelEl.textContent = r.label;
+
+                        const valEl = document.createElement('span');
+                        valEl.className = 'monitor-stat-value';
+                        if (r.isCurrent) valEl.classList.add('monitor-cpu-current');
+
+                        let val = r.value;
+                        if (!r.isText) {
+                            val = val ? formatFreq(val) : '--';
+                        }
+                        valEl.textContent = val;
+
+                        row.appendChild(labelEl);
+                        row.appendChild(valEl);
+                        list.appendChild(row);
+                    });
                 }
-
-                const rows = [
-                    { label: currentLabel, value: data.cur, isCurrent: true },
-                    { label: minLabel, value: data.min, isCurrent: false },
-                    { label: maxLabel, value: data.max, isCurrent: false },
-                    { label: govLabel, value: data.gov || '--', isCurrent: false, isText: true }
-                ];
-
-                rows.forEach(({ label, value, isCurrent, isText }) => {
-                    const row = document.createElement('div');
-                    row.className = 'monitor-stat-row';
-                    const labelEl = document.createElement('span');
-                    labelEl.className = 'monitor-stat-label';
-                    labelEl.textContent = label;
-                    const valEl = document.createElement('span');
-                    valEl.className = 'monitor-stat-value' + (isCurrent ? ' monitor-cpu-current' : '');
-                    valEl.textContent = isText ? value : formatFreq(value);
-                    row.appendChild(labelEl);
-                    row.appendChild(valEl);
-                    list.appendChild(row);
-                });
             }
-        }
 
-        // GPU features status (Floppy1280 only)
-        const kernelName = window.KERNEL_NAME || '';
-        const is1280 = kernelName === 'Floppy1280';
+            // GPU features status
+            const enabledLabel = window.t ? t('monitor.gpu.enabled') : 'Enabled';
+            const disabledLabel = window.t ? t('monitor.gpu.disabled') : 'Disabled';
+            const statusSection = document.getElementById('monitor-gpu-status');
 
-        const enabledLabel = window.t ? t('monitor.gpu.enabled') : 'Enabled';
-        const disabledLabel = window.t ? t('monitor.gpu.disabled') : 'Disabled';
+            const hasUnlock = data.unlock !== '';
+            const hasClklck = data.clklck !== '';
+            const hasAdrenoboost = data.adrenoboost !== '';
+            const hasIdler = data.idlerActive !== '';
+            const showStatus = hasUnlock || hasClklck || hasAdrenoboost || hasIdler;
 
-        const unlockRow = document.getElementById('monitor-gpu-unlock-row');
-        const clklckRow = document.getElementById('monitor-gpu-clklck-row');
-        const statusSection = document.getElementById('monitor-gpu-status');
+            if (statusSection) {
+               statusSection.style.display = showStatus ? '' : 'none';
+            }
 
-        const hasUnlock = data.unlock !== '';
-        const hasClklck = data.clklck !== '';
-        const showStatus = is1280 && (hasUnlock || hasClklck);
-
-        if (statusSection) {
-            statusSection.style.display = showStatus ? '' : 'none';
-        }
-
-        if (showStatus) {
+            // Exynos (Mali) features
+            const unlockRow = document.getElementById('monitor-gpu-unlock-row');
             if (unlockRow) {
-                setVisible(unlockRow, hasUnlock);
+                unlockRow.style.display = hasUnlock ? '' : 'none';
                 if (hasUnlock) {
                     setText('monitor-gpu-unlock-value', isEnabledValue(data.unlock) ? enabledLabel : disabledLabel);
                 }
             }
+            const clklckRow = document.getElementById('monitor-gpu-clklck-row');
             if (clklckRow) {
-                setVisible(clklckRow, hasClklck);
+                clklckRow.style.display = hasClklck ? '' : 'none';
                 if (hasClklck) {
                     setText('monitor-gpu-clklck-value', isEnabledValue(data.clklck) ? enabledLabel : disabledLabel);
                 }
             }
+
+            // Adreno features
+            const isAdreno = data.model && data.model.includes('Adreno');
+
+            const boostLabels = ['Off', 'Low', 'Medium', 'High'];
+            const boostSection = document.getElementById('monitor-gpu-adrenoboost-section');
+            
+            if (isAdreno && boostSection) {
+                boostSection.style.display = 'block'; // Show section
+                const idx = Number(data.adrenoboost) || 0;
+                const val = data.adrenoboost === '' ? 'Empty' : (boostLabels[idx] || data.adrenoboost);
+                setText('monitor-gpu-adrenoboost-value', val);
+            }
+
+            const idlerSection = document.getElementById('monitor-gpu-idler-section');
+            if (isAdreno && idlerSection) {
+                idlerSection.style.display = 'block'; // Show section
+                
+                const val = data.idlerActive === '' ? 'Empty' : (isEnabledValue(data.idlerActive) ? enabledLabel : disabledLabel);
+                setText('monitor-gpu-idler-active-value', val);
+
+                const idlerRows = [
+                    { id: 'monitor-gpu-idler-downdiff', key: 'idlerDownDiff' },
+                    { id: 'monitor-gpu-idler-idlewait', key: 'idlerIdleWait' },
+                    { id: 'monitor-gpu-idler-workload', key: 'idlerWorkload' }
+                ];
+                idlerRows.forEach(def => {
+                    const val = data[def.key] === '' ? 'Empty' : data[def.key];
+                    setText(def.id + '-value', val);
+                });
+            }
+
+        } catch (e) {
+            console.error('Error updating GPU UI', e);
         }
     }
 
